@@ -3,7 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import * as dotenv from 'dotenv';
-import path from 'path';
+import * as path from 'path';
+import { AuthModule } from './modules/auth.module';
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
@@ -27,6 +28,7 @@ dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
         timezone: 'local',
       }),
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
