@@ -40,7 +40,7 @@ export class AuthService implements AuthControllerInboundPort {
     });
 
     if (!user) {
-      throw new BadRequestException(ERROR_MESSAGE.FAIL_TO_CREATE_USER);
+      throw new BadRequestException(ERROR_MESSAGE.FAIL_TO_FIND_EMAIL);
     }
 
     // verify password
