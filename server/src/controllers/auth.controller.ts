@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, Post, Req, UseGuards } from '@nestjs/common';
+import { Controller, Inject, Post, Req, UseGuards } from '@nestjs/common';
 import { LocalAuthGuard } from 'src/auth/guard/local-auth.guard';
 import {
   AuthControllerInboundPort,
@@ -15,6 +15,11 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async logIn(@Req() req) {
+    await this.authControllerInboundPort.serializeUser({
+      user: req.user,
+      date: new Date().getTime(),
+      ttl: 3600,
+    });
     return req.user;
   }
 }
