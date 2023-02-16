@@ -1,21 +1,26 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/entities/user/user.entity';
 import {
   getUserForLogInOutboundPortInputDto,
   getUserForLogInOutboundPortOutputDto,
   UserRepositoryOutboundPort,
 } from 'src/outbound-ports/user/user-repository.outbound-port';
-import { CustomRepository } from 'src/settings/typeorm/custom-typeorm.decorator';
 import { Repository } from 'typeorm';
 
-@CustomRepository(UserEntity)
-export class UserRepository
-  extends Repository<UserEntity>
-  implements UserRepositoryOutboundPort
-{
+@Injectable()
+export class UserRepository implements UserRepositoryOutboundPort {
+  constructor(
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
+  ) {}
+
   async getUserForLogIn(
     params: getUserForLogInOutboundPortInputDto,
   ): Promise<getUserForLogInOutboundPortOutputDto> {
-    return await this.findOne({
+    console.log('User Repo');
+    console.log(this.userRepository);
+    return await this.userRepository.findOne({
       where: {
         email: params.email,
       },
