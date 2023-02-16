@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
+import { UserModule } from './modules/user.module';
 import { AuthModule } from './modules/auth.module';
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
@@ -19,15 +20,13 @@ dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
         database: process.env.DB_NAME,
         username: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
-        entities: [
-          path.join(__dirname, 'src/entities/**/*.entity.ts'),
-          path.join(__dirname, 'dist/entities/**/*.entity.js'),
-        ],
+        entities: [path.join(__dirname, '/entities/**/*.entity.{js, ts}')],
         synchronize: false,
         logging: true,
         timezone: 'local',
       }),
     }),
+    UserModule,
     AuthModule,
   ],
   controllers: [AppController],
