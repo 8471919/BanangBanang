@@ -7,6 +7,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { LocalAuthGuard } from 'src/auth/guard/local-auth.guard';
+import { Users } from 'src/decorators/user.decorator';
 import { LogInUserDto } from 'src/dtos/auth/login.user.dto';
 import {
   AuthControllerInboundPort,
@@ -39,12 +40,12 @@ export class AuthController {
   })
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async logIn(@Req() req) {
+  async logIn(@Users() user) {
     await this.authControllerInboundPort.serializeUser({
-      user: req.user,
+      user: user,
       date: new Date().getTime(),
       ttl: 3600,
     });
-    return req.user;
+    return user;
   }
 }
