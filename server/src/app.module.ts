@@ -3,30 +3,35 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import * as dotenv from 'dotenv';
-import path from 'path';
-
-dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
+import * as path from 'path';
+import { UserModule } from './modules/user.module';
+import { AuthModule } from './modules/auth.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: `.env.${process.env.NODE_ENV}`,
+      isGlobal: true,
+    }),
     TypeOrmModule.forRootAsync({
-      useFactory: () => ({
-        retryAttempts: process.env.NODE_ENV === 'prod' ? 10 : 1,
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        retryAttempts: configService.get('NODE_ENV') === 'prod' ? 10 : 1,
         type: 'postgres',
-        host: process.env.DB_HOST,
-        port: Number(process.env.DB_PORT),
-        database: process.env.DB_NAME,
-        username: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        entities: [
-          path.join(__dirname, 'src/entities/**/*.entity.ts'),
-          path.join(__dirname, 'dist/entities/**/*.entity.js'),
-        ],
+        host: configService.get('DB_HOST'),
+        port: Number(configService.get('DB_PORT')),
+        database: configService.get('DB_NAME'),
+        username: configService.get('DB_USER'),
+        password: configService.get('DB_PASSWORD'),
+        entities: [path.join(__dirname, '/entities/**/*.entity.{js, ts}')],
         synchronize: false,
         logging: true,
         timezone: 'local',
       }),
     }),
+    UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

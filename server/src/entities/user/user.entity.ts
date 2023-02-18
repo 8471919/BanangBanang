@@ -1,12 +1,4 @@
-import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { ArticleEntity } from '../article/article.entity';
 import { CommentEntity } from '../comment/comment.entity';
 import { CommonBigPKEntity } from '../common/common.entity';
