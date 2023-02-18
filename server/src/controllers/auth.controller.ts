@@ -41,11 +41,6 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async logIn(@Users() user) {
-    await this.authControllerInboundPort.serializeUser({
-      user: user,
-      date: new Date().getTime(),
-      ttl: 3600,
-    });
     return user;
   }
 }
