@@ -18,7 +18,11 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
     });
   }
 
-  async validate(email: string, password: string): Promise<any> {
+  async validate(
+    email: string,
+    password: string,
+    done: CallableFunction,
+  ): Promise<any> {
     const user = await this.authControllerInboundPort.validateUser({
       email: email,
       password: password,
@@ -28,6 +32,6 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
       throw new UnauthorizedException();
     }
 
-    return user;
+    return done(null, user);
   }
 }

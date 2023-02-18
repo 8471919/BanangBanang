@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/entities/user/user.entity';
 import {
-  getUserForLogInOutboundPortInputDto,
-  getUserForLogInOutboundPortOutputDto,
+  FindUserForDeserializeOutboundPortInputDto,
+  FindUserForDeserializeOutboundPortOPutputDto,
+  GetUserForLogInOutboundPortInputDto,
+  GetUserForLogInOutboundPortOutputDto,
   UserRepositoryOutboundPort,
 } from 'src/outbound-ports/user/user-repository.outbound-port';
 import { Repository } from 'typeorm';
@@ -16,8 +18,8 @@ export class UserRepository implements UserRepositoryOutboundPort {
   ) {}
 
   async getUserForLogIn(
-    params: getUserForLogInOutboundPortInputDto,
-  ): Promise<getUserForLogInOutboundPortOutputDto> {
+    params: GetUserForLogInOutboundPortInputDto,
+  ): Promise<GetUserForLogInOutboundPortOutputDto> {
     console.log('User Repo');
     console.log(this.userRepository);
     return await this.userRepository.findOne({
@@ -26,5 +28,19 @@ export class UserRepository implements UserRepositoryOutboundPort {
       },
       withDeleted: true,
     });
+  }
+
+  async findUserForDeserialize(
+    params: FindUserForDeserializeOutboundPortInputDto,
+  ): Promise<FindUserForDeserializeOutboundPortOPutputDto> {
+    return await this.userRepository
+      .findOneOrFail({
+        where: { id: params.userId },
+      })
+      .then((user) => {
+        console.log('user', user);
+        params.done(null, user);
+      })
+      .catch((err) => params.done(err));
   }
 }
