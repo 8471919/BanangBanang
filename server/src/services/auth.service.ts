@@ -32,9 +32,6 @@ export class AuthService implements AuthControllerInboundPort {
   async validateUser(
     params: ValidateUserInboundInputDto,
   ): Promise<ValidateUserInboundOutputDto> {
-    console.log('AuthService');
-    console.log(this.userRepositoryOutboundPort);
-    console.log(this.redisRepositoryOutboundPort);
     const user = await this.userRepositoryOutboundPort.getUserForLogIn({
       email: params.email,
     });
