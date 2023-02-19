@@ -1,6 +1,7 @@
 import { Body, Controller, Inject, Post, Req, UseGuards } from '@nestjs/common';
 import {
   ApiBody,
+  ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -45,6 +46,16 @@ export class AuthController {
     return user;
   }
 
+  @ApiOperation({
+    summary: 'Local 회원가입 api',
+    description: '유저의 이메일과 일치하는 메일이 없으면 회원가입에 성공한다.',
+  })
+  @ApiBody({
+    type: RegisterUserDto,
+  })
+  @ApiCreatedResponse({
+    description: '성공 : DB에 유저를 등록한다.',
+  })
   @Post('register')
   async register(@Body() user: RegisterUserDto) {
     await this.authControllerInboundPort.register({
