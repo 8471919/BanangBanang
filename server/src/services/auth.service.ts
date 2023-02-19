@@ -4,6 +4,8 @@ import {
   AuthControllerInboundPort,
   DeserializeUserInboundInputDto,
   DeserializeUserInboundOutputDto,
+  RegisterInboundInputDto,
+  RegisterInboundOutputDto,
   SerializeUserInboundInputDto,
   SerializeUserInboundOutputDto,
   ValidateUserInboundInputDto,
@@ -13,11 +15,15 @@ import {
   UserRepositoryOutboundPort,
   USER_REPOSITORY_OUTBOUND_PORT,
 } from 'src/outbound-ports/user/user-repository.outbound-port';
-import { compare } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 import {
   RedisRepositoryOutboundPort,
   REDIS_REPOSITORY_OUTBOUND_PORT,
 } from 'src/cache/redis/redis-repository.outbound-port';
+import {
+  ConfigServiceOutboundPort,
+  CONFIG_SERVICE_OUTBOUND_PORT,
+} from 'src/config/config-service.outbound-port';
 
 @Injectable()
 export class AuthService implements AuthControllerInboundPort {
@@ -27,6 +33,9 @@ export class AuthService implements AuthControllerInboundPort {
 
     @Inject(REDIS_REPOSITORY_OUTBOUND_PORT)
     private readonly redisRepositoryOutboundPort: RedisRepositoryOutboundPort,
+
+    @Inject(CONFIG_SERVICE_OUTBOUND_PORT)
+    private readonly configServiceOutboundPort: ConfigServiceOutboundPort,
   ) {}
 
   async validateUser(
@@ -73,5 +82,30 @@ export class AuthService implements AuthControllerInboundPort {
     return await this.redisRepositoryOutboundPort.get({
       key: params.user,
     });
+  }
+
+  async register(
+    params: RegisterInboundInputDto,
+  ): Promise<RegisterInboundOutputDto> {
+    const hashedPassword = await hash(
+      params.password,
+      await this.configServiceOutboundPort.getSaltForHash(),
+    );
+    const existedUser = await this.userRepositoryOutboundPort.getUserByEmail({
+      email: params.email,
+    });
+
+    if (existedUser) {
+      throw new BadRequestException(ERROR_MESSAGE.FAIL_TO_REGISTER_EMAIL);
+    }
+
+    const user = await this.userRepositoryOutboundPort.saveUser({
+      email: params.email,
+      hashedPassword: hashedPassword,
+    });
+
+    if (!user) {
+      throw new BadRequestException(ERROR_MESSAGE.FAIL_TO_CREATE_USER);
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Inject, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Inject, Post, Req, UseGuards } from '@nestjs/common';
 import {
   ApiBody,
   ApiOkResponse,
@@ -9,6 +9,7 @@ import {
 import { LocalAuthGuard } from 'src/auth/guard/local-auth.guard';
 import { Users } from 'src/decorators/user.decorator';
 import { LogInUserDto } from 'src/dtos/auth/login.user.dto';
+import { RegisterUserDto } from 'src/dtos/register.user.dto';
 import {
   AuthControllerInboundPort,
   AUTH_CONTROLLER_INBOUND_PORT,
@@ -42,5 +43,13 @@ export class AuthController {
   @Post('login')
   async logIn(@Users() user) {
     return user;
+  }
+
+  @Post('register')
+  async register(@Body() user: RegisterUserDto) {
+    await this.authControllerInboundPort.register({
+      email: user.email,
+      password: user.password,
+    });
   }
 }

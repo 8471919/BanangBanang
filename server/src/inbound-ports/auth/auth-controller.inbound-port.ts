@@ -26,6 +26,12 @@ export type DeserializeUserInboundInputDto = {
 };
 export type DeserializeUserInboundOutputDto = Promise<number>;
 
+export type RegisterInboundInputDto = {
+  email: string;
+  password: string;
+};
+export type RegisterInboundOutputDto = void;
+
 export interface AuthControllerInboundPort {
   validateUser(
     params: ValidateUserInboundInputDto,
@@ -38,4 +44,6 @@ export interface AuthControllerInboundPort {
   deserializeUser(
     params: DeserializeUserInboundInputDto,
   ): Promise<DeserializeUserInboundOutputDto>;
+
+  register(params: RegisterInboundInputDto): Promise<RegisterInboundOutputDto>;
 }
