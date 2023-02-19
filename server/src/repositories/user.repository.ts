@@ -37,6 +37,7 @@ export class UserRepository implements UserRepositoryOutboundPort {
     return await this.userRepository
       .findOneOrFail({
         where: { id: params.userId },
+        withDeleted: true,
       })
       .then((user) => {
         console.log('user', user);
