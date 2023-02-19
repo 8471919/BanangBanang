@@ -20,7 +20,6 @@ import { AuthService } from 'src/services/auth.service';
     PassportModule.register({ session: true }),
     TypeOrmModule.forFeature([UserEntity]),
     RedisModule,
-    PassportModule,
   ],
   controllers: [AuthController],
   providers: [
