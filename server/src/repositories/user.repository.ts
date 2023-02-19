@@ -4,8 +4,11 @@ import { UserEntity } from 'src/entities/user/user.entity';
 import {
   FindUserForDeserializeOutboundPortInputDto,
   FindUserForDeserializeOutboundPortOPutputDto,
+  GetUserByEmailOutboundPortInputDto,
+  GetUserByEmailOutboundPortOutputDto,
   GetUserForLogInOutboundPortInputDto,
   GetUserForLogInOutboundPortOutputDto,
+  SaveUserOutboundPortInputDto,
   UserRepositoryOutboundPort,
 } from 'src/outbound-ports/user/user-repository.outbound-port';
 import { Repository } from 'typeorm';
@@ -20,8 +23,6 @@ export class UserRepository implements UserRepositoryOutboundPort {
   async getUserForLogIn(
     params: GetUserForLogInOutboundPortInputDto,
   ): Promise<GetUserForLogInOutboundPortOutputDto> {
-    console.log('User Repo');
-    console.log(this.userRepository);
     return await this.userRepository.findOne({
       where: {
         email: params.email,
@@ -42,5 +43,25 @@ export class UserRepository implements UserRepositoryOutboundPort {
         params.done(null, user);
       })
       .catch((err) => params.done(err));
+  }
+
+  async getUserByEmail(
+    params: GetUserByEmailOutboundPortInputDto,
+  ): Promise<GetUserByEmailOutboundPortOutputDto> {
+    return await this.userRepository.findOne({
+      where: {
+        email: params.email,
+      },
+      withDeleted: true,
+    });
+  }
+
+  async saveUser(
+    params: SaveUserOutboundPortInputDto,
+  ): Promise<UserEntity> | undefined {
+    return await this.userRepository.save({
+      email: params.email,
+      password: params.hashedPassword,
+    });
   }
 }

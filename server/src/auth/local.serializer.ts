@@ -16,6 +16,7 @@ export class LocalSerializer extends PassportSerializer {
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   serializeUser(user: any, done: Function) {
+    console.log("here is LocalSerializer's serializeUser");
     console.log(user);
     done(null, user.id);
   }

@@ -23,6 +23,7 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
     password: string,
     done: CallableFunction,
   ): Promise<any> {
+    console.log('here is LocalStrategy1');
     const user = await this.authControllerInboundPort.validateUser({
       email: email,
       password: password,
@@ -32,6 +33,8 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
       throw new UnauthorizedException();
     }
 
+    console.log('here is LocalStrategy2');
+    // 지금 이 done에서 req.user로 user를 못 보낸다.
     return done(null, user);
   }
 }

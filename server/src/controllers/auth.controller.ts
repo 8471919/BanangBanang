@@ -1,6 +1,7 @@
-import { Controller, Inject, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Inject, Post, Req, UseGuards } from '@nestjs/common';
 import {
   ApiBody,
+  ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -9,6 +10,7 @@ import {
 import { LocalAuthGuard } from 'src/auth/guard/local-auth.guard';
 import { Users } from 'src/decorators/user.decorator';
 import { LogInUserDto } from 'src/dtos/auth/login.user.dto';
+import { RegisterUserDto } from 'src/dtos/register.user.dto';
 import {
   AuthControllerInboundPort,
   AUTH_CONTROLLER_INBOUND_PORT,
@@ -42,5 +44,23 @@ export class AuthController {
   @Post('login')
   async logIn(@Users() user) {
     return user;
+  }
+
+  @ApiOperation({
+    summary: 'Local 회원가입 api',
+    description: '유저의 이메일과 일치하는 메일이 없으면 회원가입에 성공한다.',
+  })
+  @ApiBody({
+    type: RegisterUserDto,
+  })
+  @ApiCreatedResponse({
+    description: '성공 : DB에 유저를 등록한다.',
+  })
+  @Post('register')
+  async register(@Body() user: RegisterUserDto) {
+    await this.authControllerInboundPort.register({
+      email: user.email,
+      password: user.password,
+    });
   }
 }

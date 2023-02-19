@@ -28,6 +28,18 @@ export type FindUserForDeserializeOutboundPortOPutputDto = {
   googleId: string | null;
 };
 
+export type GetUserByEmailOutboundPortInputDto = {
+  email: string;
+};
+export type GetUserByEmailOutboundPortOutputDto = {
+  id: string;
+};
+
+export type SaveUserOutboundPortInputDto = {
+  email: string;
+  hashedPassword: string;
+};
+
 export interface UserRepositoryOutboundPort {
   getUserForLogIn(
     params: GetUserForLogInOutboundPortInputDto,
@@ -36,4 +48,10 @@ export interface UserRepositoryOutboundPort {
   findUserForDeserialize(
     params: FindUserForDeserializeOutboundPortInputDto,
   ): Promise<FindUserForDeserializeOutboundPortOPutputDto>;
+
+  getUserByEmail(
+    params: GetUserByEmailOutboundPortInputDto,
+  ): Promise<GetUserByEmailOutboundPortOutputDto>;
+
+  saveUser(params: SaveUserOutboundPortInputDto): unknown;
 }
