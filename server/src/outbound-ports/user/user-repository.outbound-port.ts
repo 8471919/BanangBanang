@@ -1,10 +1,10 @@
 export const USER_REPOSITORY_OUTBOUND_PORT =
   'USER_REPOSITORY_OUTBOUND_PORT' as const;
 
-export type GetUserForLogInOutboundPortInputDto = {
+export type FindUserForLogInOutboundPortInputDto = {
   email: string;
 };
-export type GetUserForLogInOutboundPortOutputDto = {
+export type FindUserForLogInOutboundPortOutputDto = {
   id: string;
   createdAt: Date;
   updatedAt: Date | null;
@@ -28,10 +28,10 @@ export type FindUserForDeserializeOutboundPortOPutputDto = {
   googleId: string | null;
 };
 
-export type GetUserByEmailOutboundPortInputDto = {
+export type FindUserByEmailOutboundPortInputDto = {
   email: string;
 };
-export type GetUserByEmailOutboundPortOutputDto = {
+export type FindUserByEmailOutboundPortOutputDto = {
   id: string;
 };
 
@@ -41,17 +41,17 @@ export type SaveUserOutboundPortInputDto = {
 };
 
 export interface UserRepositoryOutboundPort {
-  getUserForLogIn(
-    params: GetUserForLogInOutboundPortInputDto,
-  ): Promise<GetUserForLogInOutboundPortOutputDto>;
+  findUserForLogIn(
+    params: FindUserForLogInOutboundPortInputDto,
+  ): Promise<FindUserForLogInOutboundPortOutputDto>;
 
   findUserForDeserialize(
     params: FindUserForDeserializeOutboundPortInputDto,
   ): Promise<FindUserForDeserializeOutboundPortOPutputDto>;
 
-  getUserByEmail(
-    params: GetUserByEmailOutboundPortInputDto,
-  ): Promise<GetUserByEmailOutboundPortOutputDto>;
+  findUserByEmail(
+    params: FindUserByEmailOutboundPortInputDto,
+  ): Promise<FindUserByEmailOutboundPortOutputDto>;
 
   saveUser(params: SaveUserOutboundPortInputDto): unknown;
 }

@@ -4,10 +4,10 @@ import { UserEntity } from 'src/entities/user/user.entity';
 import {
   FindUserForDeserializeOutboundPortInputDto,
   FindUserForDeserializeOutboundPortOPutputDto,
-  GetUserByEmailOutboundPortInputDto,
-  GetUserByEmailOutboundPortOutputDto,
-  GetUserForLogInOutboundPortInputDto,
-  GetUserForLogInOutboundPortOutputDto,
+  FindUserByEmailOutboundPortInputDto,
+  FindUserByEmailOutboundPortOutputDto,
+  FindUserForLogInOutboundPortInputDto,
+  FindUserForLogInOutboundPortOutputDto,
   SaveUserOutboundPortInputDto,
   UserRepositoryOutboundPort,
 } from 'src/outbound-ports/user/user-repository.outbound-port';
@@ -20,9 +20,9 @@ export class UserRepository implements UserRepositoryOutboundPort {
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  async getUserForLogIn(
-    params: GetUserForLogInOutboundPortInputDto,
-  ): Promise<GetUserForLogInOutboundPortOutputDto> {
+  async findUserForLogIn(
+    params: FindUserForLogInOutboundPortInputDto,
+  ): Promise<FindUserForLogInOutboundPortOutputDto> {
     return await this.userRepository.findOne({
       where: {
         email: params.email,
@@ -46,9 +46,9 @@ export class UserRepository implements UserRepositoryOutboundPort {
       .catch((err) => params.done(err));
   }
 
-  async getUserByEmail(
-    params: GetUserByEmailOutboundPortInputDto,
-  ): Promise<GetUserByEmailOutboundPortOutputDto> {
+  async findUserByEmail(
+    params: FindUserByEmailOutboundPortInputDto,
+  ): Promise<FindUserByEmailOutboundPortOutputDto> {
     return await this.userRepository.findOne({
       where: {
         email: params.email,

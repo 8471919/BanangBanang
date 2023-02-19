@@ -41,7 +41,7 @@ export class AuthService implements AuthControllerInboundPort {
   async validateUser(
     params: ValidateUserInboundInputDto,
   ): Promise<ValidateUserInboundOutputDto> {
-    const user = await this.userRepositoryOutboundPort.getUserForLogIn({
+    const user = await this.userRepositoryOutboundPort.findUserForLogIn({
       email: params.email,
     });
 
@@ -91,7 +91,7 @@ export class AuthService implements AuthControllerInboundPort {
       params.password,
       await this.configServiceOutboundPort.getSaltForHash(),
     );
-    const existedUser = await this.userRepositoryOutboundPort.getUserByEmail({
+    const existedUser = await this.userRepositoryOutboundPort.findUserByEmail({
       email: params.email,
     });
 
