@@ -34,7 +34,7 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
     }
 
     console.log('here is LocalStrategy2');
-    // 지금 이 done에서 req.user로 user를 못 보낸다.
+
     return done(null, user);
   }
 }

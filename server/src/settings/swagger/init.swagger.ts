@@ -3,7 +3,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 export function setUpSwagger(app: INestApplication): void {
   const options = new DocumentBuilder()
-    .addBearerAuth()
+    .addCookieAuth('connect.sid')
     .setTitle('BanangBanang API docs')
     .setDescription('배낭배낭 API 문서입니다.')
     .setVersion('0.0.1')
