@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import * as session from 'express-session';
 import * as connectRedis from 'connect-redis';
 import { Redis } from 'ioredis';
+import * as passport from 'passport';
 
 export function setUpSession(app: INestApplication): void {
   const configService = app.get<ConfigService>(ConfigService);
@@ -28,10 +29,13 @@ export function setUpSession(app: INestApplication): void {
       }),
       cookie: {
         httpOnly: true,
-        secure: true,
-        maxAge: 40000,
+        secure: false, // TODO: https로 사용할거면 true로 바꿔야한다. 지금은 로컬에서 사용하니 false로 해둔다.
+        maxAge: 1000 * 60 * 30, // 쿠키 유효기간: 30분
         path: '/',
       },
     }),
   );
+
+  app.use(passport.initialize());
+  app.use(passport.session());
 }

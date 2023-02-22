@@ -1,12 +1,22 @@
-import { Body, Controller, Inject, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Post,
+  Session,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBody,
+  ApiCookieAuth,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { LoggedInGuard } from 'src/auth/guard/logged-in.guard';
 import { LocalAuthGuard } from 'src/auth/guard/local-auth.guard';
 import { Users } from 'src/decorators/user.decorator';
 import { LogInUserDto } from 'src/dtos/auth/login.user.dto';
@@ -42,10 +52,12 @@ export class AuthController {
   })
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async logIn(@Users() user) {
-    return user;
+  async logIn(@Users() user, @Session() session) {
+    console.log(session.id);
+    return { user, sessionId: session.id };
   }
 
+  @ApiCookieAuth()
   @ApiOperation({
     summary: 'Local 회원가입 api',
     description: '유저의 이메일과 일치하는 메일이 없으면 회원가입에 성공한다.',
@@ -62,5 +74,13 @@ export class AuthController {
       email: user.email,
       password: user.password,
     });
+  }
+
+  // TODO: Swagger에서 세션 로그인이 잘 작동하는지 확인하기 위한 용도이므로, 나중에 삭제해야한다.
+  @ApiCookieAuth()
+  @UseGuards(LoggedInGuard)
+  @Get('hi')
+  async hi() {
+    return 'hi';
   }
 }
