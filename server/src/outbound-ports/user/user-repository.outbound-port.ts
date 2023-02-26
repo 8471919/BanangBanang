@@ -53,5 +53,5 @@ export interface UserRepositoryOutboundPort {
     params: FindUserByEmailOutboundPortInputDto,
   ): Promise<FindUserByEmailOutboundPortOutputDto>;
 
-  saveUser(params: SaveUserOutboundPortInputDto): unknown;
+  saveUser(params: SaveUserOutboundPortInputDto): Promise<unknown>;
 }
