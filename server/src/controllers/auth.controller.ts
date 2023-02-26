@@ -57,7 +57,6 @@ export class AuthController {
     return { user, sessionId: session.id };
   }
 
-  @ApiCookieAuth()
   @ApiOperation({
     summary: 'Local 회원가입 api',
     description: '유저의 이메일과 일치하는 메일이 없으면 회원가입에 성공한다.',
