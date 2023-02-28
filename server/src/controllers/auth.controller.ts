@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -25,6 +26,8 @@ import {
   AuthControllerInboundPort,
   AUTH_CONTROLLER_INBOUND_PORT,
 } from 'src/inbound-ports/auth/auth-controller.inbound-port';
+import { GoogleAuthGuard } from 'src/auth/guard/google-auth.guard';
+import { ERROR_MESSAGE } from 'src/common/error-message';
 
 @ApiTags('유저 인증 API')
 @Controller('api/auths')
@@ -82,5 +85,22 @@ export class AuthController {
   @Get('hi')
   async hi() {
     return 'hi';
+  }
+
+  @UseGuards(GoogleAuthGuard)
+  @Get('google')
+  async googleAuth() {
+    // redirect google login page
+  }
+
+  // 구글 로그인 후 callbackURL로 오는 요청을 처리할 API
+  @UseGuards(GoogleAuthGuard)
+  @Get('google/callback')
+  async googleAuthCallback(@Users() user) {
+    if (!user) {
+      throw new BadRequestException(ERROR_MESSAGE.FAIL_TO_GOOGLE_LOGIN);
+    }
+
+    return { user };
   }
 }
