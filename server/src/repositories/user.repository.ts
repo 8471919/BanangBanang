@@ -8,6 +8,10 @@ import {
   FindUserForLogInOutboundPortOutputDto,
   SaveUserOutboundPortInputDto,
   UserRepositoryOutboundPort,
+  FindUserByGoogleIdOutboundPortInputDto,
+  FindUserByGoogleIdOutboundPortOutputDto,
+  SaveGoogleUserOutboundPortInputDto,
+  SaveGoogleUserOutboundPortOutputDto,
 } from 'src/outbound-ports/user/user-repository.outbound-port';
 import { Repository } from 'typeorm';
 
@@ -40,12 +44,31 @@ export class UserRepository implements UserRepositoryOutboundPort {
     });
   }
 
+  async findUserByGoogleId(
+    params: FindUserByGoogleIdOutboundPortInputDto,
+  ): Promise<FindUserByGoogleIdOutboundPortOutputDto> {
+    return this.userRepository.findOne({
+      where: {
+        googleId: params.googleId,
+      },
+    });
+  }
+
   async saveUser(
     params: SaveUserOutboundPortInputDto,
   ): Promise<UserEntity> | undefined {
     return await this.userRepository.save({
       email: params.email,
       password: params.hashedPassword,
+    });
+  }
+
+  async saveGoogleUser(
+    params: SaveGoogleUserOutboundPortInputDto,
+  ): Promise<SaveGoogleUserOutboundPortOutputDto> {
+    return this.userRepository.save({
+      email: params.email,
+      googleId: params.googleId,
     });
   }
 }

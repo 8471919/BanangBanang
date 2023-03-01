@@ -12,4 +12,8 @@ export class EnvService implements ConfigServiceOutboundPort {
   async getSaltForHash(): Promise<GetSaltForHashOutboundPortOutputDto> {
     return await this.configService.get('BCRYPT_HASH_SALT');
   }
+
+  // async getGoogleOAuthClientId(params: void): Promise<string> {}
+
+  // async getGoogleOAuthClientSecret(params: void): Promise<string> {}
 }

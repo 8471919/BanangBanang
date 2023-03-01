@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LocalSerializer } from 'src/auth/local.serializer';
+import { GoogleStrategy } from 'src/auth/strategies/google.strategy';
 import { LocalStrategy } from 'src/auth/strategies/local.strategy';
 import { REDIS_REPOSITORY_OUTBOUND_PORT } from 'src/cache/redis/redis-repository.outbound-port';
 import { RedisModule } from 'src/cache/redis/redis.module';
@@ -42,6 +43,7 @@ import { AuthService } from 'src/services/auth.service';
     AuthService,
     LocalStrategy,
     LocalSerializer,
+    GoogleStrategy,
   ],
   exports: [AuthService],
 })
