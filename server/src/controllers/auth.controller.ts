@@ -61,7 +61,6 @@ export class AuthController {
     return { user, sessionId: session.id };
   }
 
-  @ApiCookieAuth()
   @ApiOperation({
     summary: 'Local 회원가입 api',
     description: '유저의 이메일과 일치하는 메일이 없으면 회원가입에 성공한다.',
@@ -88,12 +87,20 @@ export class AuthController {
     return 'hi';
   }
 
+  @ApiOperation({
+    summary: 'google oauth 로그인 api',
+    description: '해당 api는 swagger에서 사용할 수 없습니다.',
+  })
   @UseGuards(GoogleAuthGuard)
   @Get('google')
   async googleAuth() {
     // redirect google login page
   }
 
+  @ApiOperation({
+    summary: 'google oauth 로그인 callback api',
+    description: '해당 api는 swagger에서 사용할 수 없습니다.',
+  })
   // 구글 로그인 후 callbackURL로 오는 요청을 처리할 API
   @UseGuards(GoogleAuthGuard)
   @Get('google/callback')
@@ -108,6 +115,10 @@ export class AuthController {
     return { user, sessionId: session.id };
   }
 
+  @ApiOperation({
+    summary: 'session logout api',
+    description: '세션 로그아웃을 위한 api입니다.',
+  })
   @Post('logout')
   async logOut(@Req() req, @Res() res, @Session() session) {
     session.destroy();
