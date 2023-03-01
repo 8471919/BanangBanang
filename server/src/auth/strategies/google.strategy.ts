@@ -24,7 +24,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 
     const user = {
       provider: 'google',
-      id: id,
+      providerId: id,
       firstName: name.givenName, // 혹은 name: name.givenName으로만 받자.
       lastName: name.familyName,
       email: emails[0].value,

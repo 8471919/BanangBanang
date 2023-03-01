@@ -4,6 +4,8 @@ import {
   Get,
   Inject,
   Post,
+  Req,
+  Res,
   Session,
   UseGuards,
 } from '@nestjs/common';
@@ -97,11 +99,19 @@ export class AuthController {
   @Get('google/callback')
   async googleAuthCallback(
     @Users() user: ValidateUserForGoogleInboundInputDto,
+    @Session() session,
   ) {
     const googleId = await this.authControllerInboundPort.validateUserForGoogle(
       user,
     );
 
-    return { user };
+    return { user, sessionId: session.id };
+  }
+
+  @Post('logout')
+  async logOut(@Req() req, @Res() res, @Session() session) {
+    session.destroy();
+    res.clearCookie('connect.sid', { httpOnly: true });
+    res.send('OK');
   }
 }

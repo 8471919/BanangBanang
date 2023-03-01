@@ -10,13 +10,16 @@ export class GoogleAuthGuard extends AuthGuard('google') {
   //   });
   // }
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    console.log('googleAuthGuard1');
     const can = await super.canActivate(context);
-
+    console.log('googleAuthGuard2');
     if (can) {
+      console.log('In can');
       const request = context.switchToHttp().getRequest();
+      console.log(request.isAuthenticated());
       await super.logIn(request);
     }
-
+    console.log('googleAuthGuard3');
     return true;
   }
 }
