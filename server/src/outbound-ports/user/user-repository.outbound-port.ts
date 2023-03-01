@@ -14,6 +14,20 @@ export type FindUserForLogInOutboundPortOutputDto = {
   googleId: string | null;
 };
 
+export type FindUserForDeserializeOutboundPortInputDto = {
+  userId: string;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  done: Function;
+};
+export type FindUserForDeserializeOutboundPortOPutputDto = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date | null;
+  deletedAt: Date | null;
+  email: string;
+  googleId: string | null;
+};
+
 export type FindUserByEmailOutboundPortInputDto = {
   email: string;
 };
@@ -45,6 +59,10 @@ export interface UserRepositoryOutboundPort {
   findUserForLogIn(
     params: FindUserForLogInOutboundPortInputDto,
   ): Promise<FindUserForLogInOutboundPortOutputDto>;
+
+  findUserForDeserialize(
+    params: FindUserForDeserializeOutboundPortInputDto,
+  ): Promise<FindUserForDeserializeOutboundPortOPutputDto>;
 
   findUserByEmail(
     params: FindUserByEmailOutboundPortInputDto,

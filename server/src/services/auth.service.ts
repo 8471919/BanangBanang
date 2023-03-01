@@ -4,8 +4,6 @@ import {
   AuthControllerInboundPort,
   RegisterInboundInputDto,
   RegisterInboundOutputDto,
-  SerializeUserInboundInputDto,
-  SerializeUserInboundOutputDto,
   ValidateUserForGoogleInboundInputDto,
   ValidateUserForGoogleInboundOutputDto,
   ValidateUserInboundInputDto,
@@ -16,10 +14,6 @@ import {
   USER_REPOSITORY_OUTBOUND_PORT,
 } from 'src/outbound-ports/user/user-repository.outbound-port';
 import { compare, hash } from 'bcrypt';
-import {
-  ConfigServiceOutboundPort,
-  CONFIG_SERVICE_OUTBOUND_PORT,
-} from 'src/config/config-service.outbound-port';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -27,9 +21,6 @@ export class AuthService implements AuthControllerInboundPort {
   constructor(
     @Inject(USER_REPOSITORY_OUTBOUND_PORT)
     private readonly userRepositoryOutboundPort: UserRepositoryOutboundPort,
-
-    @Inject(REDIS_REPOSITORY_OUTBOUND_PORT)
-    private readonly redisRepositoryOutboundPort: RedisRepositoryOutboundPort,
 
     private readonly configService: ConfigService,
   ) {}
