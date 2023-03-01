@@ -10,6 +10,7 @@ import {
   ValidateUserInboundOutputDto,
 } from 'src/inbound-ports/auth/auth-controller.inbound-port';
 import {
+  FindUserByGoogleIdOutboundPortOutputDto,
   UserRepositoryOutboundPort,
   USER_REPOSITORY_OUTBOUND_PORT,
 } from 'src/outbound-ports/user/user-repository.outbound-port';

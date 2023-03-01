@@ -1,19 +1,29 @@
 import {
   FindUserByEmailOutboundPortInputDto,
   FindUserByEmailOutboundPortOutputDto,
+  FindUserByGoogleIdOutboundPortInputDto,
+  FindUserByGoogleIdOutboundPortOutputDto,
+  FindUserForDeserializeOutboundPortInputDto,
+  FindUserForDeserializeOutboundPortOPutputDto,
   FindUserForLogInOutboundPortInputDto,
   FindUserForLogInOutboundPortOutputDto,
+  SaveGoogleUserOutboundPortInputDto,
+  SaveGoogleUserOutboundPortOutputDto,
   SaveUserOutboundPortInputDto,
   UserRepositoryOutboundPort,
 } from 'src/outbound-ports/user/user-repository.outbound-port';
 import { AuthService } from 'src/services/auth.service';
 import { hash } from 'bcrypt';
 import { ConfigServiceOutboundPort } from 'src/config/config-service.outbound-port';
+import { ConfigService } from '@nestjs/config';
 
 type MockUserRepositoryOutboundPortParamType = {
   findUserForLogIn?: FindUserForLogInOutboundPortOutputDto;
+  findUserForDeserialize?: FindUserForDeserializeOutboundPortOPutputDto;
   findUserByEmail?: FindUserByEmailOutboundPortOutputDto;
+  findUserByGoogleId?: FindUserByGoogleIdOutboundPortOutputDto;
   saveUser?: unknown;
+  saveGoogleUser?: SaveGoogleUserOutboundPortOutputDto;
 };
 class MockUserRepositoryOutboundPort implements UserRepositoryOutboundPort {
   private readonly result: MockUserRepositoryOutboundPortParamType;
@@ -27,31 +37,35 @@ class MockUserRepositoryOutboundPort implements UserRepositoryOutboundPort {
   ): Promise<FindUserForLogInOutboundPortOutputDto> {
     return this.result.findUserForLogIn;
   }
+  async findUserForDeserialize(
+    params: FindUserForDeserializeOutboundPortInputDto,
+  ): Promise<FindUserForDeserializeOutboundPortOPutputDto> {
+    return this.result.findUserForDeserialize;
+  }
   async findUserByEmail(
     params: FindUserByEmailOutboundPortInputDto,
   ): Promise<FindUserByEmailOutboundPortOutputDto> {
     return this.result.findUserByEmail;
   }
+  async findUserByGoogleId(
+    params: FindUserByGoogleIdOutboundPortInputDto,
+  ): Promise<FindUserByGoogleIdOutboundPortOutputDto> {
+    return this.result.findUserByGoogleId;
+  }
   async saveUser(params: SaveUserOutboundPortInputDto): Promise<unknown> {
     return this.result.saveUser;
   }
+  async saveGoogleUser(
+    params: SaveGoogleUserOutboundPortInputDto,
+  ): Promise<SaveGoogleUserOutboundPortOutputDto> {
+    return this.result.saveGoogleUser;
+  }
 }
 
-type MockConfigServiceOutboundPortParamType = {
-  getSaltForHash?: number;
-};
-class MockConfigServiceOutboundPort implements ConfigServiceOutboundPort {
-  private readonly result: MockConfigServiceOutboundPortParamType;
-  constructor(result: MockConfigServiceOutboundPortParamType) {
-    this.result = result;
-  }
-  async getSaltForHash(params: void): Promise<number> {
-    return this.result.getSaltForHash;
-  }
-}
+const configService = new ConfigService();
 
 describe('AuthService Spec', () => {
-  test('Validate User Test', async () => {
+  test('ValidateUser Test', async () => {
     const user: FindUserForLogInOutboundPortOutputDto = {
       id: '1',
       createdAt: new Date('2023-01-01'),
@@ -64,7 +78,7 @@ describe('AuthService Spec', () => {
 
     const authService = new AuthService(
       new MockUserRepositoryOutboundPort({ findUserForLogIn: user }),
-      new MockConfigServiceOutboundPort(null),
+      configService,
     );
     const res = await authService.validateUser({
       email: 'develop@google.com',
@@ -93,7 +107,7 @@ describe('AuthService Spec', () => {
           findUserByEmail: existedUser,
           saveUser: 1,
         }),
-        new MockConfigServiceOutboundPort({ getSaltForHash: 1 }),
+        configService,
       );
 
       await authService.register({
@@ -103,5 +117,41 @@ describe('AuthService Spec', () => {
     } catch (err) {
       expect(1).toBe(2);
     }
+  });
+
+  test('ValidateUserForGoogle Test When User is already existed', async () => {
+    const user = {
+      providerId: '1',
+    };
+
+    const authService = new AuthService(
+      new MockUserRepositoryOutboundPort({
+        findUserByGoogleId: { googleId: '1' },
+        saveGoogleUser: null,
+      }),
+      configService,
+    );
+
+    const res = await authService.validateUserForGoogle(user);
+
+    expect(res).toStrictEqual({ googleId: '1' });
+  });
+
+  test('ValidateUserForGoogle Test When User is not existed', async () => {
+    const user = {
+      providerId: '2',
+    };
+
+    const authService = new AuthService(
+      new MockUserRepositoryOutboundPort({
+        findUserByGoogleId: null,
+        saveGoogleUser: { googleId: '2' },
+      }),
+      configService,
+    );
+
+    const res = await authService.validateUserForGoogle(user);
+
+    expect(res).toStrictEqual({ googleId: '2' });
   });
 });
