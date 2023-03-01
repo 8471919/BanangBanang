@@ -2,8 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/entities/user/user.entity';
 import {
-  FindUserForDeserializeOutboundPortInputDto,
-  FindUserForDeserializeOutboundPortOPutputDto,
   FindUserByEmailOutboundPortInputDto,
   FindUserByEmailOutboundPortOutputDto,
   FindUserForLogInOutboundPortInputDto,
@@ -33,21 +31,6 @@ export class UserRepository implements UserRepositoryOutboundPort {
       },
       withDeleted: true,
     });
-  }
-
-  async findUserForDeserialize(
-    params: FindUserForDeserializeOutboundPortInputDto,
-  ): Promise<FindUserForDeserializeOutboundPortOPutputDto> {
-    return await this.userRepository
-      .findOneOrFail({
-        where: { id: params.userId },
-        withDeleted: true,
-      })
-      .then((user) => {
-        console.log('user', user);
-        params.done(null, user);
-      })
-      .catch((err) => params.done(err));
   }
 
   async findUserByEmail(
