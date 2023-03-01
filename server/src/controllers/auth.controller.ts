@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
@@ -25,9 +24,9 @@ import { RegisterUserDto } from 'src/dtos/register.user.dto';
 import {
   AuthControllerInboundPort,
   AUTH_CONTROLLER_INBOUND_PORT,
+  ValidateUserForGoogleInboundInputDto,
 } from 'src/inbound-ports/auth/auth-controller.inbound-port';
 import { GoogleAuthGuard } from 'src/auth/guard/google-auth.guard';
-import { ERROR_MESSAGE } from 'src/common/error-message';
 
 @ApiTags('유저 인증 API')
 @Controller('api/auths')
@@ -96,10 +95,12 @@ export class AuthController {
   // 구글 로그인 후 callbackURL로 오는 요청을 처리할 API
   @UseGuards(GoogleAuthGuard)
   @Get('google/callback')
-  async googleAuthCallback(@Users() user) {
-    if (!user) {
-      throw new BadRequestException(ERROR_MESSAGE.FAIL_TO_GOOGLE_LOGIN);
-    }
+  async googleAuthCallback(
+    @Users() user: ValidateUserForGoogleInboundInputDto,
+  ) {
+    const googleId = await this.authControllerInboundPort.validateUserForGoogle(
+      user,
+    );
 
     return { user };
   }

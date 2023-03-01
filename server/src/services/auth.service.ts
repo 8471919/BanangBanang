@@ -8,6 +8,8 @@ import {
   RegisterInboundOutputDto,
   SerializeUserInboundInputDto,
   SerializeUserInboundOutputDto,
+  ValidateUserForGoogleInboundInputDto,
+  ValidateUserForGoogleInboundOutputDto,
   ValidateUserInboundInputDto,
   ValidateUserInboundOutputDto,
 } from 'src/inbound-ports/auth/auth-controller.inbound-port';
@@ -107,5 +109,39 @@ export class AuthService implements AuthControllerInboundPort {
     if (!user) {
       throw new BadRequestException(ERROR_MESSAGE.FAIL_TO_CREATE_USER);
     }
+  }
+
+  async validateUserForGoogle(
+    params: ValidateUserForGoogleInboundInputDto,
+  ): Promise<ValidateUserForGoogleInboundOutputDto> {
+    const user = params;
+
+    if (!user) {
+      throw new BadRequestException(ERROR_MESSAGE.FAIL_TO_GOOGLE_LOGIN);
+    }
+
+    // providerId로 user가 존재하는지 여부 확인
+    const existedUser =
+      await this.userRepositoryOutboundPort.findUserByGoogleId({
+        googleId: user.id,
+      });
+
+    // user가 존재하지 않으면, DB에 register하기
+    if (!existedUser) {
+      const registerUser = await this.userRepositoryOutboundPort.saveGoogleUser(
+        {
+          googleId: user.id,
+          email: user.email,
+        },
+      );
+
+      if (!registerUser) {
+        throw new BadRequestException(ERROR_MESSAGE.FAIL_TO_CREATE_USER);
+      }
+
+      return { googleId: registerUser.googleId };
+    }
+
+    return { googleId: existedUser.googleId };
   }
 }

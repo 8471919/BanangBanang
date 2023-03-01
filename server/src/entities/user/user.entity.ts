@@ -8,8 +8,8 @@ export class UserEntity extends CommonBigPKEntity {
   @Column('varchar', { unique: true, nullable: false })
   email: string;
 
-  @Column('varchar', { unique: false, nullable: false })
-  password: string;
+  @Column('varchar', { unique: false, nullable: true })
+  password: string | null;
 
   @Column('varchar', { unique: true, nullable: true })
   googleId: string | null;

@@ -35,9 +35,24 @@ export type FindUserByEmailOutboundPortOutputDto = {
   id: string;
 };
 
+export type FindUserByGoogleIdOutboundPortInputDto = {
+  googleId: string;
+};
+export type FindUserByGoogleIdOutboundPortOutputDto = {
+  googleId: string;
+};
+
 export type SaveUserOutboundPortInputDto = {
   email: string;
   hashedPassword: string;
+};
+
+export type SaveGoogleUserOutboundPortInputDto = {
+  googleId: string;
+  email: string;
+};
+export type SaveGoogleUserOutboundPortOutputDto = {
+  googleId: string;
 };
 
 export interface UserRepositoryOutboundPort {
@@ -53,5 +68,13 @@ export interface UserRepositoryOutboundPort {
     params: FindUserByEmailOutboundPortInputDto,
   ): Promise<FindUserByEmailOutboundPortOutputDto>;
 
+  findUserByGoogleId(
+    params: FindUserByGoogleIdOutboundPortInputDto,
+  ): Promise<FindUserByGoogleIdOutboundPortOutputDto>;
+
   saveUser(params: SaveUserOutboundPortInputDto): unknown;
+
+  saveGoogleUser(
+    params: SaveGoogleUserOutboundPortInputDto,
+  ): Promise<SaveGoogleUserOutboundPortOutputDto>;
 }
