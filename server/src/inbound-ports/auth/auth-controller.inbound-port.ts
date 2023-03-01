@@ -27,7 +27,7 @@ export type ValidateUserForGoogleInboundInputDto = {
   lastName?: string;
   email?: string;
   picture?: string;
-  accessToken: string;
+  accessToken?: string;
   refreshToken?: string;
 };
 export type ValidateUserForGoogleInboundOutputDto = {

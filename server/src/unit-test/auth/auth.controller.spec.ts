@@ -4,6 +4,8 @@ import {
   AuthControllerInboundPort,
   RegisterInboundInputDto,
   RegisterInboundOutputDto,
+  ValidateUserForGoogleInboundInputDto,
+  ValidateUserForGoogleInboundOutputDto,
   ValidateUserInboundInputDto,
   ValidateUserInboundOutputDto,
 } from 'src/inbound-ports/auth/auth-controller.inbound-port';
@@ -11,6 +13,7 @@ import {
 type MockAuthControllerInboundPortParamType = {
   validateUser?: ValidateUserInboundOutputDto;
   register?: RegisterInboundOutputDto;
+  validateUserForGoogle?: ValidateUserForGoogleInboundOutputDto;
 };
 class MockAuthControllerInboundPort implements AuthControllerInboundPort {
   private readonly result: MockAuthControllerInboundPortParamType;
@@ -25,6 +28,11 @@ class MockAuthControllerInboundPort implements AuthControllerInboundPort {
   }
   async register(params: RegisterInboundInputDto): Promise<void> {
     return this.result.register;
+  }
+  async validateUserForGoogle(
+    params: ValidateUserForGoogleInboundInputDto,
+  ): Promise<ValidateUserForGoogleInboundOutputDto> {
+    return this.result.validateUserForGoogle;
   }
 }
 
@@ -45,6 +53,44 @@ describe('AuthController Spec', () => {
     const res = await authController.logIn(user, session);
 
     expect(res).toStrictEqual({ user, sessionId: session.id });
+  });
+
+  test('Google LogIn', async () => {
+    const user: ValidateUserForGoogleInboundInputDto = {
+      accessToken: '123',
+    };
+    const authController = new AuthController(
+      new MockAuthControllerInboundPort({
+        validateUserForGoogle: { googleId: '1' },
+      }),
+    );
+
+    await authController.googleAuth();
+    const res = await authController.googleAuthCallback(user, { id: 1 });
+
+    expect(res).toStrictEqual({ user: { accessToken: '123' }, sessionId: 1 });
+  });
+
+  test('LogOut', async () => {
+    const request = {};
+
+    const response = {
+      clearCookie: (sid: string, options: object) => true,
+      send: (message: string) => message,
+    };
+
+    const session = {
+      destroy: () => true,
+    };
+
+    const authController = new AuthController(
+      new MockAuthControllerInboundPort(null),
+    );
+    try {
+      await authController.logOut(request, response, session);
+    } catch (err) {
+      expect(1).toBe(2);
+    }
   });
 
   test('Register User', async () => {
