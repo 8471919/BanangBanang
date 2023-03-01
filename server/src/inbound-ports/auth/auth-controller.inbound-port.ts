@@ -34,7 +34,7 @@ export type RegisterInboundOutputDto = void;
 
 export type ValidateUserForGoogleInboundInputDto = {
   provider?: string;
-  id?: string;
+  providerId?: string;
   firstName?: string;
   lastName?: string;
   email?: string;

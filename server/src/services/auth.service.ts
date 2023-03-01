@@ -26,6 +26,7 @@ import {
   ConfigServiceOutboundPort,
   CONFIG_SERVICE_OUTBOUND_PORT,
 } from 'src/config/config-service.outbound-port';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService implements AuthControllerInboundPort {
@@ -36,8 +37,7 @@ export class AuthService implements AuthControllerInboundPort {
     @Inject(REDIS_REPOSITORY_OUTBOUND_PORT)
     private readonly redisRepositoryOutboundPort: RedisRepositoryOutboundPort,
 
-    @Inject(CONFIG_SERVICE_OUTBOUND_PORT)
-    private readonly configServiceOutboundPort: ConfigServiceOutboundPort,
+    private readonly configService: ConfigService,
   ) {}
 
   async validateUser(
@@ -91,7 +91,7 @@ export class AuthService implements AuthControllerInboundPort {
   ): Promise<RegisterInboundOutputDto> {
     const hashedPassword = await hash(
       params.password,
-      await this.configServiceOutboundPort.getSaltForHash(),
+      Number(await this.configService.get('BCRYPT_HASH_SALT')),
     );
     const existedUser = await this.userRepositoryOutboundPort.findUserByEmail({
       email: params.email,
@@ -120,17 +120,20 @@ export class AuthService implements AuthControllerInboundPort {
       throw new BadRequestException(ERROR_MESSAGE.FAIL_TO_GOOGLE_LOGIN);
     }
 
+    console.log('Before existedUser');
     // providerId로 user가 존재하는지 여부 확인
     const existedUser =
       await this.userRepositoryOutboundPort.findUserByGoogleId({
-        googleId: user.id,
+        googleId: user.providerId,
       });
+
+    console.log('After existedUser');
 
     // user가 존재하지 않으면, DB에 register하기
     if (!existedUser) {
       const registerUser = await this.userRepositoryOutboundPort.saveGoogleUser(
         {
-          googleId: user.id,
+          googleId: user.providerId,
           email: user.email,
         },
       );
