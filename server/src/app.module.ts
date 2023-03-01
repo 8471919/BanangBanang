@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import * as dotenv from 'dotenv';
 import * as path from 'path';
 import { UserModule } from './modules/user.module';
 import { AuthModule } from './modules/auth.module';

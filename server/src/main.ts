@@ -11,6 +11,8 @@ async function bootstrap() {
 
   setUpSwagger(app);
 
+  app.enableCors();
+
   await app.listen(port);
   console.log(`Server is open on port ${port}`);
 }

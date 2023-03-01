@@ -18,11 +18,19 @@ export class LocalSerializer extends PassportSerializer {
   serializeUser(user: any, done: Function) {
     console.log("here is LocalSerializer's serializeUser");
     console.log(user);
-    done(null, user.id);
+    done(null, user.id ?? { id: user.providerId, provider: 'google' });
   }
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   async deserializeUser(payload: any, done: Function) {
+    console.log('Deserialization');
+    console.log(payload);
+
+    if (payload.provider === 'google') {
+      return await this.userRepositoryOutboundPort.findUserByGoogleId({
+        googleId: payload.id,
+      });
+    }
     return await this.userRepositoryOutboundPort.findUserForDeserialize({
       userId: payload,
       done,

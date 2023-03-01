@@ -32,6 +32,20 @@ export type RegisterInboundInputDto = {
 };
 export type RegisterInboundOutputDto = void;
 
+export type ValidateUserForGoogleInboundInputDto = {
+  provider?: string;
+  providerId?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  picture?: string;
+  accessToken: string;
+  refreshToken?: string;
+};
+export type ValidateUserForGoogleInboundOutputDto = {
+  googleId: string;
+};
+
 export interface AuthControllerInboundPort {
   validateUser(
     params: ValidateUserInboundInputDto,
@@ -46,4 +60,8 @@ export interface AuthControllerInboundPort {
   ): Promise<DeserializeUserInboundOutputDto>;
 
   register(params: RegisterInboundInputDto): Promise<RegisterInboundOutputDto>;
+
+  validateUserForGoogle(
+    params: ValidateUserForGoogleInboundInputDto,
+  ): Promise<ValidateUserForGoogleInboundOutputDto>;
 }
