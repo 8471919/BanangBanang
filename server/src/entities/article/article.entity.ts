@@ -49,6 +49,7 @@ export class ArticleEntity extends CommonBigPKEntity {
   @OneToOne(
     () => JobPostingExtendArticleEntity,
     (jobPosting) => jobPosting.article,
+    { cascade: true },
   )
   jobPosting: JobPostingExtendArticleEntity;
 
