@@ -1,5 +1,6 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { CommonBigPKEntity } from '../common/common.entity';
+import { ArticleEntity } from './article.entity';
 
 @Entity('JOB_POSTING_APPLICANT')
 export class JobPostingApplicantEntity extends CommonBigPKEntity {
@@ -14,4 +15,8 @@ export class JobPostingApplicantEntity extends CommonBigPKEntity {
 
   @Column('text', { unique: false, nullable: false })
   content: string;
+
+  @ManyToOne(() => ArticleEntity, (article) => article.jobApplicants)
+  @JoinColumn({ name: 'articleId', referencedColumnName: 'id' })
+  article: ArticleEntity;
 }
