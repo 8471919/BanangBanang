@@ -8,7 +8,7 @@ export class JobPostingExtendArticleEntity extends CommonBigPKEntity {
   companyName: string;
 
   @Column('timestamp', { unique: false, nullable: false })
-  expiration_date: Date;
+  expirationDate: Date;
 
   @Column('bigint', { unique: true, nullable: false })
   articleId: string;

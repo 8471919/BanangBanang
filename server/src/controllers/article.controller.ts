@@ -1,0 +1,49 @@
+import { Body, Controller, Inject, Post, UseGuards } from '@nestjs/common';
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
+import { LoggedInGuard } from 'src/auth/guard/logged-in.guard';
+import {
+  ArticleControllerInboundPort,
+  ARTICLE_CONTROLLER_INBOUNT_PORT,
+  CreateArticleInboundPortInputDto,
+} from 'src/inbound-ports/article/article-controller.inbound-port';
+
+@ApiTags('게시글 API')
+@Controller('api/articles')
+export class ArticleController {
+  constructor(
+    @Inject(ARTICLE_CONTROLLER_INBOUNT_PORT)
+    private readonly articleControllerInboundPort: ArticleControllerInboundPort,
+  ) {}
+
+  @ApiOperation({
+    summary: '게시글 작성 api',
+    description: 'articleTypeId에 따라 다른 게시글 생성',
+  })
+  @ApiBody({
+    schema: {
+      properties: {
+        title: { default: 'test title' },
+        content: { default: 'test content' },
+        userId: { default: '1' },
+        articleAreaId: { default: '1' },
+        articleTypeId: { default: '1' },
+        companyName: { default: 'test company' },
+        expirationDate: { default: '2023-12-31T00:00:00.702Z' },
+      },
+    },
+  })
+  @ApiCreatedResponse({
+    description: '성공 : DB에 게시글을 등록한다.',
+  })
+  @UseGuards(LoggedInGuard)
+  @Post()
+  async createArticle(@Body() body: CreateArticleInboundPortInputDto) {
+    console.log('create article controller');
+    return await this.articleControllerInboundPort.createArticle(body);
+  }
+}
