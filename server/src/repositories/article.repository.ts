@@ -86,7 +86,7 @@ export class ArticleRepository implements ArticleRepositoryOutboundPort {
       const articleCount = await query.getCount();
 
       // 순서 정렬, order 속성에는 디폴트값으로 createdAt과 DESC가 들어갈 것
-      if (!params.order) {
+      if (!params.order.type) {
         params['order'] = { type: 'createdAt', order: 'DESC' };
       }
       query = query.orderBy(`a.${params.order.type}`, `${params.order.order}`);
