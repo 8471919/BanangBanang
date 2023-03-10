@@ -1,8 +1,17 @@
-import { Body, Controller, Inject, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBody,
   ApiCreatedResponse,
   ApiOperation,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { LoggedInGuard } from 'src/auth/guard/logged-in.guard';
@@ -10,6 +19,7 @@ import {
   ArticleControllerInboundPort,
   ARTICLE_CONTROLLER_INBOUNT_PORT,
   CreateArticleInboundPortInputDto,
+  ReadArticlesInboundPortInputDto,
 } from 'src/inbound-ports/article/article-controller.inbound-port';
 
 @ApiTags('게시글 API')
@@ -45,5 +55,11 @@ export class ArticleController {
   async createArticle(@Body() body: CreateArticleInboundPortInputDto) {
     console.log('create article controller');
     return await this.articleControllerInboundPort.createArticle(body);
+  }
+
+  // 게시글을 타입, 지역 별로 가져올 수도 있어야 한다.
+  @Get()
+  async readArticles(@Query() query: ReadArticlesInboundPortInputDto) {
+    return await this.articleControllerInboundPort.readArticles(query);
   }
 }
