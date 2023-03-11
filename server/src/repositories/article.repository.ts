@@ -55,12 +55,12 @@ export class ArticleRepository implements ArticleRepositoryOutboundPort {
       let query = this.articleRepository
         .createQueryBuilder('a')
         .select([
-          'a.id',
-          'a.title',
-          'a.createdAt',
-          'a.userId',
-          'a.articleTypeId',
-          'a.articleAreaId',
+          'a.id as id',
+          'a.title as title',
+          'a.createdAt as createdAt',
+          'a.userId as userId',
+          'a.articleTypeId as articleTypeId',
+          'a.articleAreaId as articleAreaId',
         ]);
 
       // 유저 Id에 따른 게시글 리스트 불러오기 (undefined시 모든 유저의 게시글을 불러온다)
@@ -82,9 +82,6 @@ export class ArticleRepository implements ArticleRepositoryOutboundPort {
         });
       }
 
-      // 조건에 맞는 게시글의 총 개수를 반환
-      const articleCount = await query.getCount();
-
       // 순서 정렬, order 속성에는 디폴트값으로 createdAt과 DESC가 들어갈 것
       if (!params.order.type) {
         params['order'] = { type: 'createdAt', order: 'DESC' };
@@ -98,6 +95,9 @@ export class ArticleRepository implements ArticleRepositoryOutboundPort {
       query = query.take(params.perPage);
 
       const articles = await query.getRawMany();
+
+      // 조건에 맞는 게시글의 총 개수를 반환
+      const articleCount = await query.getCount();
 
       return { articles, articleCount };
     } catch (e) {
