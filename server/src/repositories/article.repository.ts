@@ -55,38 +55,38 @@ export class ArticleRepository implements ArticleRepositoryOutboundPort {
       let query = this.articleRepository
         .createQueryBuilder('a')
         .select([
-          'a.id as id',
-          'a.title as title',
-          'a.createdAt as createdAt',
-          'a.userId as userId',
-          'a.articleTypeId as articleTypeId',
-          'a.articleAreaId as articleAreaId',
+          'a.id as "id"',
+          'a.title as "title"',
+          'a.createdAt as "createdAt"',
+          'a.userId as "userId"',
+          'a.articleTypeId as "articleTypeId"',
+          'a.articleAreaId as "articleAreaId"',
         ]);
 
       // 유저 Id에 따른 게시글 리스트 불러오기 (undefined시 모든 유저의 게시글을 불러온다)
       if (params.userId) {
-        query = query.where('a.userId = :userId', { userId: params.userId });
+        query = query.where('userId = :userId', { userId: params.userId });
       }
 
       // 게시글 유형에 따른 필터 (undefined시 모든 유형의 게시글을 불러온다)
       if (params.articleTypeId) {
-        query = query.andWhere('a.articleTypeId = :articleTypeId', {
+        query = query.andWhere('articleTypeId = :articleTypeId', {
           articleTypeId: params.articleTypeId,
         });
       }
 
       // 게시글 지역에 따른 필터 (undefined시 모든 지역의 게시글을 불러온다)
       if (params.articleAreaId) {
-        query = query.andWhere('a.articleAreaId = :articleAreaId', {
+        query = query.andWhere('articleAreaId = :articleAreaId', {
           articleAreaId: params.articleAreaId,
         });
       }
 
       // 순서 정렬, order 속성에는 디폴트값으로 createdAt과 DESC가 들어갈 것
       if (!params.order.type) {
-        params['order'] = { type: 'createdAt', order: 'DESC' };
+        params['order'] = { type: '"createdAt"', order: 'DESC' };
       }
-      query = query.orderBy(`a.${params.order.type}`, `${params.order.order}`);
+      query = query.orderBy(`${params.order.type}`, `${params.order.order}`);
 
       // 몇 번째 페이지를 불러오는지 설정
       query = query.skip(params.perPage * (params.currentPage - 1));
