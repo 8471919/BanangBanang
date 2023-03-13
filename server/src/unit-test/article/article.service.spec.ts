@@ -1,7 +1,13 @@
 import { ARTICLE_TYPE } from 'src/common/article/article-type.constant';
-import { CreateArticleInboundPortInputDto } from 'src/inbound-ports/article/article-controller.inbound-port';
+import { ArticleEntity } from 'src/entities/article/article.entity';
+import {
+  CreateArticleInboundPortInputDto,
+  ReadArticlesInboundPortInputDto,
+} from 'src/inbound-ports/article/article-controller.inbound-port';
 import {
   ArticleRepositoryOutboundPort,
+  FindAllArticlesOutboundPortInputDto,
+  FindAllArticlesOutboundPortOutputDto,
   SaveCommonArticleOutboundPortInputDto,
   SaveCommonArticleOutboundPortOutputDto,
   SaveJobPostingOutboundPortOutputDto,
@@ -12,6 +18,7 @@ import { ArticleService } from 'src/services/article.service';
 type MockArticleRepositoryOutboundPortParamType = {
   saveCommonArticle?: SaveCommonArticleOutboundPortOutputDto;
   saveJogPosting?: SaveJobPostingOutboundPortOutputDto;
+  findAllArticles?: FindAllArticlesOutboundPortOutputDto;
 };
 
 class MockArticleRepositoryOutboundPort
@@ -22,7 +29,6 @@ class MockArticleRepositoryOutboundPort
   constructor(result: MockArticleRepositoryOutboundPortParamType) {
     this.result = result;
   }
-
   async saveCommonArticle(
     params: SaveCommonArticleOutboundPortInputDto,
   ): Promise<SaveCommonArticleOutboundPortOutputDto> {
@@ -32,6 +38,11 @@ class MockArticleRepositoryOutboundPort
     params: SaveJogPostingOutboundPortInputDto,
   ): Promise<SaveJobPostingOutboundPortOutputDto> {
     return this.result.saveJogPosting;
+  }
+  async findAllArticles(
+    params: FindAllArticlesOutboundPortInputDto,
+  ): Promise<FindAllArticlesOutboundPortOutputDto> {
+    return this.result.findAllArticles;
   }
 }
 
@@ -76,5 +87,94 @@ describe('ArticleService Spec', () => {
     const res = await articleService.createArticle(article);
 
     expect(res).toStrictEqual({ articleId: '1' });
+  });
+
+  test('read Article List', async () => {
+    const articles = [
+      {
+        id: '1',
+        title: 'Test Article Title',
+        content: 'Test Article Content',
+        userId: '1',
+        articleAreaId: 1,
+        articleTypeId: 1,
+        createdAt: new Date('2023-01-01'),
+      },
+      {
+        id: '2',
+        title: 'Test Article Title2',
+        content: 'Test Article Content2',
+        userId: '2',
+        articleAreaId: 2,
+        articleTypeId: 2,
+        createdAt: new Date('2023-01-02'),
+      },
+      {
+        id: '3',
+        title: 'Test Article Title2',
+        content: 'Test Article Content2',
+        userId: '3',
+        articleAreaId: 1,
+        articleTypeId: 2,
+        createdAt: new Date('2023-01-03'),
+      },
+      {
+        id: '4',
+        title: 'Test Article Title2',
+        content: 'Test Article Content2',
+        userId: '4',
+        articleAreaId: 2,
+        articleTypeId: 1,
+        createdAt: new Date('2023-01-04'),
+      },
+      {
+        id: '5',
+        title: 'Test Article Title2',
+        content: 'Test Article Content2',
+        userId: '5',
+        articleAreaId: 2,
+        articleTypeId: 2,
+        createdAt: new Date('2023-01-05'),
+      },
+      {
+        id: '6',
+        title: 'Test Article Title2',
+        content: 'Test Article Content2',
+        userId: '6',
+        articleAreaId: 2,
+        articleTypeId: 2,
+        createdAt: new Date('2023-01-06'),
+      },
+      {
+        id: '7',
+        title: 'Test Article Title2',
+        content: 'Test Article Content2',
+        userId: '7',
+        articleAreaId: 1,
+        articleTypeId: 1,
+        createdAt: new Date('2023-01-07'),
+      },
+    ];
+
+    const params: ReadArticlesInboundPortInputDto = {
+      currentPage: 1,
+      perPage: 7,
+    };
+
+    const articleService = new ArticleService(
+      new MockArticleRepositoryOutboundPort({
+        findAllArticles: { articles, articleCount: articles.length },
+      }),
+    );
+
+    const res = await articleService.readArticles(params);
+
+    expect(res).toStrictEqual({
+      articleCount: 7,
+      articles: articles,
+      currentPage: 1,
+      pageCount: Math.ceil(articles.length / params.perPage),
+      perPage: params.perPage,
+    });
   });
 });
