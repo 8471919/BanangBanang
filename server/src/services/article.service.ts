@@ -5,6 +5,8 @@ import {
   ArticleControllerInboundPort,
   CreateArticleInboundPortInputDto,
   CreateArticleInboundPortOutputDto,
+  ReadArticlesInboundPortInputDto,
+  ReadArticlesInboundPortOutputDto,
 } from 'src/inbound-ports/article/article-controller.inbound-port';
 import {
   ArticleRepositoryOutboundPort,
@@ -45,5 +47,22 @@ export class ArticleService implements ArticleControllerInboundPort {
         expirationDate: params.expirationDate,
       });
     }
+  }
+
+  async readArticles(
+    params: ReadArticlesInboundPortInputDto,
+  ): Promise<ReadArticlesInboundPortOutputDto> {
+    const { articles, articleCount } =
+      await this.articleRepositoryOutboundPort.findAllArticles(params);
+
+    const res: ReadArticlesInboundPortOutputDto = {
+      articleCount: articleCount,
+      articles: articles,
+      currentPage: params.currentPage,
+      pageCount: Math.ceil(articleCount / params.perPage),
+      perPage: params.perPage,
+    };
+
+    return res;
   }
 }

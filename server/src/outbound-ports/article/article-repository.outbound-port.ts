@@ -25,6 +25,22 @@ export type SaveJobPostingOutboundPortOutputDto = {
   articleId: string;
 };
 
+export type FindAllArticlesOutboundPortInputDto = {
+  userId?: string;
+  articleTypeId?: number;
+  articleAreaId?: number;
+  order?: {
+    type: string;
+    order: 'ASC' | 'DESC';
+  };
+  perPage: number;
+  currentPage: number;
+};
+export type FindAllArticlesOutboundPortOutputDto = {
+  articles: any[];
+  articleCount: number;
+};
+
 export interface ArticleRepositoryOutboundPort {
   saveCommonArticle(
     params: SaveCommonArticleOutboundPortInputDto,
@@ -33,4 +49,8 @@ export interface ArticleRepositoryOutboundPort {
   saveJobPosting(
     params: SaveJogPostingOutboundPortInputDto,
   ): Promise<SaveJobPostingOutboundPortOutputDto>;
+
+  findAllArticles(
+    params: FindAllArticlesOutboundPortInputDto,
+  ): Promise<FindAllArticlesOutboundPortOutputDto>;
 }
