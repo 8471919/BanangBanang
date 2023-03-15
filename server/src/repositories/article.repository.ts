@@ -6,6 +6,8 @@ import {
   ArticleRepositoryOutboundPort,
   FindAllArticlesOutboundPortInputDto,
   FindAllArticlesOutboundPortOutputDto,
+  FindOneArticleOutboundPortInputDto,
+  FindOneArticleOutboundPortOutputDto,
   SaveCommonArticleOutboundPortInputDto,
   SaveCommonArticleOutboundPortOutputDto,
   SaveJobPostingOutboundPortOutputDto,
@@ -104,5 +106,23 @@ export class ArticleRepository implements ArticleRepositoryOutboundPort {
       console.log(e);
       throw new BadRequestException(ERROR_MESSAGE.FAIL_TO_GET_ARTICLE);
     }
+  }
+
+  async findOneArticle(
+    params: FindOneArticleOutboundPortInputDto,
+  ): Promise<FindOneArticleOutboundPortOutputDto> {
+    const article = await this.articleRepository
+      .createQueryBuilder('a')
+      .select()
+      .innerJoinAndMapOne('a.user', 'a.user', 'u', 'u.id = a.userId')
+      .innerJoinAndSelect('a.articleArea', 'aa', 'a.articleAreaId = aa.id')
+      .innerJoinAndSelect('a.articleType', 'at', 'a.articleTypeId = at.id')
+      .leftJoinAndMapMany('a.comments', 'a.comments', 'c', 'c.articleId = a.id')
+      .leftJoinAndSelect('a.jobPosting', 'j', 'j.articleId = a.id')
+      .where('a.id = :articleId', { articleId: params.articleId })
+      .take(1)
+      .getOne();
+
+    return article;
   }
 }
