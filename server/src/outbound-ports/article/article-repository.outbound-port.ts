@@ -44,7 +44,40 @@ export type FindAllArticlesOutboundPortOutputDto = {
 export type FindOneArticleOutboundPortInputDto = {
   articleId: string;
 };
-export type FindOneArticleOutboundPortOutputDto = {};
+export type FindOneArticleOutboundPortOutputDto = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  title: string;
+  content: string;
+  user: {
+    id: string;
+  };
+  articleArea: {
+    id: number;
+    area: string;
+  };
+  articleType: {
+    id: number;
+    type: string;
+  };
+  comments?: {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    userId: string;
+    content: string;
+    parentId: string;
+    depth: number;
+  }[];
+  jobPosting?: {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    companyName: string;
+    expirationDate: Date;
+  };
+};
 
 export interface ArticleRepositoryOutboundPort {
   saveCommonArticle(

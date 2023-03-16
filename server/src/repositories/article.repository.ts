@@ -113,11 +113,18 @@ export class ArticleRepository implements ArticleRepositoryOutboundPort {
   ): Promise<FindOneArticleOutboundPortOutputDto> {
     const article = await this.articleRepository
       .createQueryBuilder('a')
-      .select()
-      .innerJoinAndMapOne('a.user', 'a.user', 'u', 'u.id = a.userId')
+      .select([
+        'a.id',
+        'a.createdAt',
+        'a.updatedAt',
+        'a.title',
+        'a.content',
+        'u.id',
+      ])
+      .innerJoin('a.user', 'u', 'u.id = a.userId')
       .innerJoinAndSelect('a.articleArea', 'aa', 'a.articleAreaId = aa.id')
       .innerJoinAndSelect('a.articleType', 'at', 'a.articleTypeId = at.id')
-      .leftJoinAndMapMany('a.comments', 'a.comments', 'c', 'c.articleId = a.id')
+      .leftJoinAndSelect('a.comments', 'c', 'a.id = c.articleId')
       .leftJoinAndSelect('a.jobPosting', 'j', 'j.articleId = a.id')
       .where('a.id = :articleId', { articleId: params.articleId })
       .take(1)
