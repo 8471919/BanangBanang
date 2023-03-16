@@ -3,6 +3,8 @@ import {
   ArticleControllerInboundPort,
   CreateArticleInboundPortInputDto,
   CreateArticleInboundPortOutputDto,
+  ReadAnArticleInboundPortInputDto,
+  ReadAnArticleInboundPortOutputDto,
   ReadArticlesInboundPortInputDto,
   ReadArticlesInboundPortOutputDto,
 } from 'src/inbound-ports/article/article-controller.inbound-port';
@@ -10,6 +12,7 @@ import {
 type MockArticleControllerInboundPortParamType = {
   createArticle?: CreateArticleInboundPortOutputDto;
   readArticles?: ReadArticlesInboundPortOutputDto;
+  readAnArticle?: ReadAnArticleInboundPortOutputDto;
 };
 
 class MockArticleControllerInboundPort implements ArticleControllerInboundPort {
@@ -27,6 +30,11 @@ class MockArticleControllerInboundPort implements ArticleControllerInboundPort {
     params: ReadArticlesInboundPortInputDto,
   ): Promise<ReadArticlesInboundPortOutputDto> {
     return this.result.readArticles;
+  }
+  async readAnArticle(
+    params: ReadAnArticleInboundPortInputDto,
+  ): Promise<ReadAnArticleInboundPortOutputDto> {
+    return this.result.readAnArticle;
   }
 }
 
@@ -147,5 +155,38 @@ describe('ArticleController Spec', () => {
       pageCount: Math.ceil(articles.length / perPage),
       perPage: perPage,
     });
+  });
+
+  test('Read An Article', async () => {
+    const articleId = '1';
+
+    const article: ReadAnArticleInboundPortOutputDto = {
+      id: articleId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      title: 'test title',
+      content: 'hello, world!',
+      user: {
+        id: '1',
+      },
+      articleArea: {
+        id: 1,
+        area: 'Seoul',
+      },
+      articleType: {
+        id: 1,
+        type: 'Job Posting',
+      },
+      comments: [],
+      jobPosting: null,
+    };
+
+    const articleController = new ArticleController(
+      new MockArticleControllerInboundPort({ readAnArticle: article }),
+    );
+
+    const res = await articleController.readAnArticle(articleId);
+
+    expect(res).toStrictEqual(article);
   });
 });
