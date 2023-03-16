@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Inject,
+  Param,
   Post,
   Query,
   UseGuards,
@@ -11,6 +12,7 @@ import {
   ApiBody,
   ApiCreatedResponse,
   ApiOperation,
+  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
@@ -90,5 +92,10 @@ export class ArticleController {
     };
 
     return await this.articleControllerInboundPort.readArticles(params);
+  }
+
+  @Get(':id')
+  async readAnArticle(@Param('id') id: string) {
+    return this.articleControllerInboundPort.readAnArticle({ articleId: id });
   }
 }
