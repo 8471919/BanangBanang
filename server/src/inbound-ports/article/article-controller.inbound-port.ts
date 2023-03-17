@@ -33,6 +33,44 @@ export type ReadArticlesInboundPortOutputDto = {
   pageCount: number; // 총 몇 페이지까지 있는지 = 마지막 페이지 번호
 };
 
+export type ReadAnArticleInboundPortInputDto = {
+  articleId: string;
+};
+export type ReadAnArticleInboundPortOutputDto = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  title: string;
+  content: string;
+  user: {
+    id: string;
+  };
+  articleArea: {
+    id: number;
+    area: string;
+  };
+  articleType: {
+    id: number;
+    type: string;
+  };
+  comments?: {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    userId: string;
+    content: string;
+    parentId: string;
+    depth: number;
+  }[];
+  jobPosting?: {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    companyName: string;
+    expirationDate: Date;
+  };
+};
+
 export interface ArticleControllerInboundPort {
   createArticle(
     params: CreateArticleInboundPortInputDto,
@@ -41,4 +79,8 @@ export interface ArticleControllerInboundPort {
   readArticles(
     params: ReadArticlesInboundPortInputDto,
   ): Promise<ReadArticlesInboundPortOutputDto>;
+
+  readAnArticle(
+    params: ReadAnArticleInboundPortInputDto,
+  ): Promise<ReadAnArticleInboundPortOutputDto>;
 }

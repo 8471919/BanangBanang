@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Inject,
+  Param,
   Post,
   Query,
   UseGuards,
@@ -11,6 +12,7 @@ import {
   ApiBody,
   ApiCreatedResponse,
   ApiOperation,
+  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
@@ -59,6 +61,11 @@ export class ArticleController {
   }
 
   // 게시글을 타입, 지역 별로 가져올 수도 있어야 한다.
+  @ApiOperation({
+    summary: '게시글 목록 조회 api',
+    description:
+      '게시글 유형, 지역, 사용자, 정렬 등에 따라 게시글 목록을 조회한다.',
+  })
   @ApiQueries(
     [
       { name: 'perPage', description: '페이지 당 게시글 개수' },
@@ -90,5 +97,19 @@ export class ArticleController {
     };
 
     return await this.articleControllerInboundPort.readArticles(params);
+  }
+
+  @ApiOperation({
+    summary: '게시글 조회 api',
+    description: '게시글 id로 해당 게시글 조회',
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: '게시글 id',
+  })
+  @Get(':id')
+  async readAnArticle(@Param('id') id: string) {
+    return this.articleControllerInboundPort.readAnArticle({ articleId: id });
   }
 }

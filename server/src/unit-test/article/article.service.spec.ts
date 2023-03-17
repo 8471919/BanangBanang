@@ -8,6 +8,8 @@ import {
   ArticleRepositoryOutboundPort,
   FindAllArticlesOutboundPortInputDto,
   FindAllArticlesOutboundPortOutputDto,
+  FindOneArticleOutboundPortInputDto,
+  FindOneArticleOutboundPortOutputDto,
   SaveCommonArticleOutboundPortInputDto,
   SaveCommonArticleOutboundPortOutputDto,
   SaveJobPostingOutboundPortOutputDto,
@@ -19,6 +21,7 @@ type MockArticleRepositoryOutboundPortParamType = {
   saveCommonArticle?: SaveCommonArticleOutboundPortOutputDto;
   saveJogPosting?: SaveJobPostingOutboundPortOutputDto;
   findAllArticles?: FindAllArticlesOutboundPortOutputDto;
+  findOneArticle?: FindOneArticleOutboundPortOutputDto;
 };
 
 class MockArticleRepositoryOutboundPort
@@ -43,6 +46,11 @@ class MockArticleRepositoryOutboundPort
     params: FindAllArticlesOutboundPortInputDto,
   ): Promise<FindAllArticlesOutboundPortOutputDto> {
     return this.result.findAllArticles;
+  }
+  async findOneArticle(
+    params: FindOneArticleOutboundPortInputDto,
+  ): Promise<FindOneArticleOutboundPortOutputDto> {
+    return this.result.findOneArticle;
   }
 }
 
@@ -176,5 +184,38 @@ describe('ArticleService Spec', () => {
       pageCount: Math.ceil(articles.length / params.perPage),
       perPage: params.perPage,
     });
+  });
+
+  test('Read One Article', async () => {
+    const articleId = '1';
+
+    const article: FindOneArticleOutboundPortOutputDto = {
+      id: articleId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      title: 'test title',
+      content: 'hello, world!',
+      user: {
+        id: '1',
+      },
+      articleArea: {
+        id: 1,
+        area: 'Seoul',
+      },
+      articleType: {
+        id: 1,
+        type: 'Job Posting',
+      },
+      comments: [],
+      jobPosting: null,
+    };
+
+    const articleService = new ArticleService(
+      new MockArticleRepositoryOutboundPort({ findOneArticle: article }),
+    );
+
+    const res = await articleService.readAnArticle({ articleId: articleId });
+
+    expect(res).toStrictEqual(article);
   });
 });

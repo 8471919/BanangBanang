@@ -5,6 +5,8 @@ import {
   ArticleControllerInboundPort,
   CreateArticleInboundPortInputDto,
   CreateArticleInboundPortOutputDto,
+  ReadAnArticleInboundPortInputDto,
+  ReadAnArticleInboundPortOutputDto,
   ReadArticlesInboundPortInputDto,
   ReadArticlesInboundPortOutputDto,
 } from 'src/inbound-ports/article/article-controller.inbound-port';
@@ -64,5 +66,13 @@ export class ArticleService implements ArticleControllerInboundPort {
     };
 
     return res;
+  }
+
+  async readAnArticle(
+    params: ReadAnArticleInboundPortInputDto,
+  ): Promise<ReadAnArticleInboundPortOutputDto> {
+    return this.articleRepositoryOutboundPort.findOneArticle({
+      articleId: params.articleId,
+    });
   }
 }

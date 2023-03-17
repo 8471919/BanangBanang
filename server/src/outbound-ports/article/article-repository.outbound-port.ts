@@ -41,6 +41,44 @@ export type FindAllArticlesOutboundPortOutputDto = {
   articleCount: number;
 };
 
+export type FindOneArticleOutboundPortInputDto = {
+  articleId: string;
+};
+export type FindOneArticleOutboundPortOutputDto = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  title: string;
+  content: string;
+  user: {
+    id: string;
+  };
+  articleArea: {
+    id: number;
+    area: string;
+  };
+  articleType: {
+    id: number;
+    type: string;
+  };
+  comments?: {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    userId: string;
+    content: string;
+    parentId: string;
+    depth: number;
+  }[];
+  jobPosting?: {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    companyName: string;
+    expirationDate: Date;
+  };
+};
+
 export interface ArticleRepositoryOutboundPort {
   saveCommonArticle(
     params: SaveCommonArticleOutboundPortInputDto,
@@ -53,4 +91,8 @@ export interface ArticleRepositoryOutboundPort {
   findAllArticles(
     params: FindAllArticlesOutboundPortInputDto,
   ): Promise<FindAllArticlesOutboundPortOutputDto>;
+
+  findOneArticle(
+    params: FindOneArticleOutboundPortInputDto,
+  ): Promise<FindOneArticleOutboundPortOutputDto>;
 }
