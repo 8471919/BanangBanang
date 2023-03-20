@@ -14,6 +14,10 @@ import {
   SaveCommonArticleOutboundPortOutputDto,
   SaveJobPostingOutboundPortOutputDto,
   SaveJogPostingOutboundPortInputDto,
+  UpdateCommonArticleOutboundPortInputDto,
+  UpdateCommonArticleOutboundPortOutputDto,
+  UpdateJobPostingOutboundPortInputDto,
+  UpdateJobPostingOutboundPortOutputDto,
 } from 'src/outbound-ports/article/article-repository.outbound-port';
 import { ArticleService } from 'src/services/article.service';
 
@@ -22,6 +26,8 @@ type MockArticleRepositoryOutboundPortParamType = {
   saveJogPosting?: SaveJobPostingOutboundPortOutputDto;
   findAllArticles?: FindAllArticlesOutboundPortOutputDto;
   findOneArticle?: FindOneArticleOutboundPortOutputDto;
+  updateCommonArticle?: UpdateCommonArticleOutboundPortOutputDto;
+  updateJobPosting?: UpdateJobPostingOutboundPortOutputDto;
 };
 
 class MockArticleRepositoryOutboundPort
@@ -51,6 +57,16 @@ class MockArticleRepositoryOutboundPort
     params: FindOneArticleOutboundPortInputDto,
   ): Promise<FindOneArticleOutboundPortOutputDto> {
     return this.result.findOneArticle;
+  }
+  async updateCommonArticle(
+    params: UpdateCommonArticleOutboundPortInputDto,
+  ): Promise<UpdateCommonArticleOutboundPortOutputDto> {
+    return this.result.updateCommonArticle;
+  }
+  async updateJobPosting(
+    params: UpdateJobPostingOutboundPortInputDto,
+  ): Promise<UpdateJobPostingOutboundPortOutputDto> {
+    return this.result.updateJobPosting;
   }
 }
 
@@ -217,5 +233,49 @@ describe('ArticleService Spec', () => {
     const res = await articleService.readAnArticle({ articleId: articleId });
 
     expect(res).toStrictEqual(article);
+  });
+
+  test('Update Common Article', async () => {
+    const article: UpdateCommonArticleOutboundPortInputDto = {
+      userId: '1',
+      articleId: '1',
+      title: 'Test Update title',
+      content: 'Test Update content',
+      articleAreaId: 1,
+      articleTypeId: 1,
+    };
+
+    const articleService = new ArticleService(
+      new MockArticleRepositoryOutboundPort({
+        updateCommonArticle: { affected: 1 },
+      }),
+    );
+
+    const res = await articleService.updateArticle(article);
+
+    expect(res).toStrictEqual({ affected: 1 });
+  });
+
+  test('Update JobPosting', async () => {
+    const article: UpdateJobPostingOutboundPortInputDto = {
+      userId: '1',
+      articleId: '1',
+      title: 'Test Update title',
+      content: 'Test Update content',
+      articleAreaId: 1,
+      articleTypeId: 2,
+      companyName: 'Test company',
+      expirationDate: new Date('2023-12-12'),
+    };
+
+    const articleService = new ArticleService(
+      new MockArticleRepositoryOutboundPort({
+        updateJobPosting: { affected: 1 },
+      }),
+    );
+
+    const res = await articleService.updateArticle(article);
+
+    expect(res).toStrictEqual({ affected: 1 });
   });
 });
