@@ -143,6 +143,7 @@ export class ArticleRepository implements ArticleRepositoryOutboundPort {
     const article = await this.articleRepository.update(
       {
         id: params.articleId,
+        userId: params.userId,
       },
       {
         title: params.title,
@@ -163,6 +164,7 @@ export class ArticleRepository implements ArticleRepositoryOutboundPort {
     const article = await this.articleRepository.update(
       {
         id: params.articleId,
+        userId: params.userId,
       },
       {
         title: params.title,

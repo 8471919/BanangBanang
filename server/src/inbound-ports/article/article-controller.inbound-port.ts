@@ -72,6 +72,7 @@ export type ReadAnArticleInboundPortOutputDto = {
 };
 
 export type UpdateArticleInboundPortInputDto = {
+  userId: string;
   articleId: string;
   title: string;
   content: string;

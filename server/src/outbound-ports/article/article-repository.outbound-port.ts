@@ -80,6 +80,7 @@ export type FindOneArticleOutboundPortOutputDto = {
 };
 
 export type UpdateCommonArticleOutboundPortInputDto = {
+  userId: string;
   articleId: string;
   title: string;
   content: string;
@@ -91,6 +92,7 @@ export type UpdateCommonArticleOutboundPortOutputDto = {
 };
 
 export type UpdateJobPostingOutboundPortInputDto = {
+  userId: string;
   articleId: string;
   title: string;
   content: string;

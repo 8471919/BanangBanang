@@ -91,6 +91,7 @@ export class ArticleService implements ArticleControllerInboundPort {
       }
 
       return this.articleRepositoryOutboundPort.updateJobPosting({
+        userId: params.userId,
         articleId: params.articleId,
         title: params.title,
         content: params.content,
