@@ -155,7 +155,7 @@ export class ArticleRepository implements ArticleRepositoryOutboundPort {
 
     console.log(article);
 
-    return { articleId: '1' };
+    return { affected: article?.affected };
   }
 
   async updateJobPosting(
@@ -179,6 +179,6 @@ export class ArticleRepository implements ArticleRepositoryOutboundPort {
 
     console.log(article);
 
-    return { articleId: '1' };
+    return { affected: article?.affected };
   }
 }

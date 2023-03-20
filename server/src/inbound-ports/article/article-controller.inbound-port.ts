@@ -82,7 +82,7 @@ export type UpdateArticleInboundPortInputDto = {
   expirationDate?: Date;
 };
 export type UpdateArticleInboundPortOutputDto = {
-  articleId: string;
+  affected: number | undefined;
 };
 
 export interface ArticleControllerInboundPort {

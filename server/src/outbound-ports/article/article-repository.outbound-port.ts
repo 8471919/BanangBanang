@@ -88,7 +88,7 @@ export type UpdateCommonArticleOutboundPortInputDto = {
   articleTypeId: number;
 };
 export type UpdateCommonArticleOutboundPortOutputDto = {
-  articleId: string;
+  affected: number | undefined;
 };
 
 export type UpdateJobPostingOutboundPortInputDto = {
@@ -102,7 +102,7 @@ export type UpdateJobPostingOutboundPortInputDto = {
   expirationDate: Date;
 };
 export type UpdateJobPostingOutboundPortOutputDto = {
-  articleId: string;
+  affected: number | undefined;
 };
 
 export interface ArticleRepositoryOutboundPort {
