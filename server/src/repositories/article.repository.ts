@@ -4,6 +4,8 @@ import { ERROR_MESSAGE } from 'src/common/error-message';
 import { ArticleEntity } from 'src/entities/article/article.entity';
 import {
   ArticleRepositoryOutboundPort,
+  RemoveArticleOutboundPortInputDto,
+  RemoveArticleOutboundPortOutputDto,
   FindAllArticlesOutboundPortInputDto,
   FindAllArticlesOutboundPortOutputDto,
   FindOneArticleOutboundPortInputDto,
@@ -178,6 +180,22 @@ export class ArticleRepository implements ArticleRepositoryOutboundPort {
     );
 
     console.log(article);
+
+    return { affected: article?.affected };
+  }
+
+  async removeArticle(
+    params: RemoveArticleOutboundPortInputDto,
+  ): Promise<RemoveArticleOutboundPortOutputDto> {
+    const article = await this.articleRepository.softDelete({
+      id: params.articleId,
+      userId: params.userId,
+    });
+
+    console.log(article);
+    if (article?.affected === 0) {
+      throw new BadRequestException(ERROR_MESSAGE.FAIL_TO_DELETE_ARTICLE);
+    }
 
     return { affected: article?.affected };
   }

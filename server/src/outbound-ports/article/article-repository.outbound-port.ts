@@ -105,6 +105,14 @@ export type UpdateJobPostingOutboundPortOutputDto = {
   affected: number | undefined;
 };
 
+export type RemoveArticleOutboundPortInputDto = {
+  userId: string;
+  articleId: string;
+};
+export type RemoveArticleOutboundPortOutputDto = {
+  affected: number | undefined;
+};
+
 export interface ArticleRepositoryOutboundPort {
   saveCommonArticle(
     params: SaveCommonArticleOutboundPortInputDto,
@@ -129,4 +137,8 @@ export interface ArticleRepositoryOutboundPort {
   updateJobPosting(
     params: UpdateJobPostingOutboundPortInputDto,
   ): Promise<UpdateJobPostingOutboundPortOutputDto>;
+
+  removeArticle(
+    params: RemoveArticleOutboundPortInputDto,
+  ): Promise<RemoveArticleOutboundPortOutputDto>;
 }
