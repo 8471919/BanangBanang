@@ -11,4 +11,8 @@ export const ERROR_MESSAGE = {
     code: 400,
     message: '게시글 목록을 불러오지 못했습니다.',
   },
+  FAIL_TO_DELETE_ARTICLE: {
+    code: 400,
+    message: '게시글 삭제를 실패하였습니다.',
+  },
 };
