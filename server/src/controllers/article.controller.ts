@@ -5,6 +5,7 @@ import {
   Inject,
   Param,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -18,11 +19,14 @@ import {
 } from '@nestjs/swagger';
 import { LoggedInGuard } from 'src/auth/guard/logged-in.guard';
 import { ApiQueries } from 'src/decorators/api-queries.decorator';
+import { Users } from 'src/decorators/user.decorator';
+import { GetUserIdDto } from 'src/dtos/auth/get.user-id.dto';
 import {
   ArticleControllerInboundPort,
   ARTICLE_CONTROLLER_INBOUNT_PORT,
   CreateArticleInboundPortInputDto,
   ReadArticlesInboundPortInputDto,
+  UpdateArticleInboundPortInputDto,
 } from 'src/inbound-ports/article/article-controller.inbound-port';
 
 @ApiTags('게시글 API')
@@ -111,5 +115,44 @@ export class ArticleController {
   @Get(':id')
   async readAnArticle(@Param('id') id: string) {
     return this.articleControllerInboundPort.readAnArticle({ articleId: id });
+  }
+
+  @ApiOperation({
+    summary: '게시글 수정 api',
+    description: '게시글 id로 해당 게시글 수정',
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: '게시글 id',
+  })
+  @ApiBody({
+    schema: {
+      properties: {
+        title: { default: 'update title' },
+        content: { default: 'update content' },
+        articleAreaId: { default: '1' },
+        articleTypeId: { default: '1' },
+        companyName: {
+          default: 'update company Name',
+          description: 'optional',
+        },
+        expirationDate: { default: '2023-12-12', description: 'optional' },
+      },
+    },
+  })
+  @UseGuards(LoggedInGuard)
+  @Put(':id')
+  async updateArticle(
+    @Param('id') articleId: string,
+    @Body()
+    body: Omit<UpdateArticleInboundPortInputDto, 'articleId' | 'userId'>,
+    @Users() user: GetUserIdDto,
+  ) {
+    return this.articleControllerInboundPort.updateArticle({
+      userId: user.id,
+      ...body,
+      articleId: articleId,
+    });
   }
 }
