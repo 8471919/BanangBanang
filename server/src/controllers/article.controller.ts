@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -152,6 +153,27 @@ export class ArticleController {
     return this.articleControllerInboundPort.updateArticle({
       userId: user.id,
       ...body,
+      articleId: articleId,
+    });
+  }
+
+  @ApiOperation({
+    summary: '게시글 삭제 api',
+    description: '게시글 id로 해당 개시글 삭제',
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: '게시글 id',
+  })
+  @UseGuards(LoggedInGuard)
+  @Delete(':id')
+  async deleteArticle(
+    @Param('id') articleId: string,
+    @Users() user: GetUserIdDto,
+  ) {
+    return this.articleControllerInboundPort.removeArticle({
+      userId: user.id,
       articleId: articleId,
     });
   }
