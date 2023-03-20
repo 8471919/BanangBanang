@@ -12,6 +12,10 @@ import {
   SaveCommonArticleOutboundPortOutputDto,
   SaveJobPostingOutboundPortOutputDto,
   SaveJogPostingOutboundPortInputDto,
+  UpdateCommonArticleOutboundPortInputDto,
+  UpdateCommonArticleOutboundPortOutputDto,
+  UpdateJobPostingOutboundPortInputDto,
+  UpdateJobPostingOutboundPortOutputDto,
 } from 'src/outbound-ports/article/article-repository.outbound-port';
 import { Repository } from 'typeorm';
 
@@ -131,5 +135,50 @@ export class ArticleRepository implements ArticleRepositoryOutboundPort {
       .getOne();
 
     return article;
+  }
+
+  async updateCommonArticle(
+    params: UpdateCommonArticleOutboundPortInputDto,
+  ): Promise<UpdateCommonArticleOutboundPortOutputDto> {
+    const article = await this.articleRepository.update(
+      {
+        id: params.articleId,
+        userId: params.userId,
+      },
+      {
+        title: params.title,
+        content: params.content,
+        articleAreaId: params.articleAreaId,
+        articleTypeId: params.articleTypeId,
+      },
+    );
+
+    console.log(article);
+
+    return { affected: article?.affected };
+  }
+
+  async updateJobPosting(
+    params: UpdateJobPostingOutboundPortInputDto,
+  ): Promise<UpdateJobPostingOutboundPortOutputDto> {
+    const article = await this.articleRepository.update(
+      {
+        id: params.articleId,
+        userId: params.userId,
+      },
+      {
+        title: params.title,
+        content: params.content,
+        articleAreaId: params.articleAreaId,
+        jobPosting: {
+          companyName: params.companyName,
+          expirationDate: params.expirationDate,
+        },
+      },
+    );
+
+    console.log(article);
+
+    return { affected: article?.affected };
   }
 }

@@ -79,6 +79,32 @@ export type FindOneArticleOutboundPortOutputDto = {
   };
 };
 
+export type UpdateCommonArticleOutboundPortInputDto = {
+  userId: string;
+  articleId: string;
+  title: string;
+  content: string;
+  articleAreaId: number;
+  articleTypeId: number;
+};
+export type UpdateCommonArticleOutboundPortOutputDto = {
+  affected: number | undefined;
+};
+
+export type UpdateJobPostingOutboundPortInputDto = {
+  userId: string;
+  articleId: string;
+  title: string;
+  content: string;
+  articleAreaId: number;
+  articleTypeId: number;
+  companyName: string;
+  expirationDate: Date;
+};
+export type UpdateJobPostingOutboundPortOutputDto = {
+  affected: number | undefined;
+};
+
 export interface ArticleRepositoryOutboundPort {
   saveCommonArticle(
     params: SaveCommonArticleOutboundPortInputDto,
@@ -95,4 +121,12 @@ export interface ArticleRepositoryOutboundPort {
   findOneArticle(
     params: FindOneArticleOutboundPortInputDto,
   ): Promise<FindOneArticleOutboundPortOutputDto>;
+
+  updateCommonArticle(
+    params: UpdateCommonArticleOutboundPortInputDto,
+  ): Promise<UpdateCommonArticleOutboundPortOutputDto>;
+
+  updateJobPosting(
+    params: UpdateJobPostingOutboundPortInputDto,
+  ): Promise<UpdateJobPostingOutboundPortOutputDto>;
 }

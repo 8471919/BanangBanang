@@ -71,6 +71,20 @@ export type ReadAnArticleInboundPortOutputDto = {
   };
 };
 
+export type UpdateArticleInboundPortInputDto = {
+  userId: string;
+  articleId: string;
+  title: string;
+  content: string;
+  articleAreaId: number;
+  articleTypeId: number;
+  companyName?: string;
+  expirationDate?: Date;
+};
+export type UpdateArticleInboundPortOutputDto = {
+  affected: number | undefined;
+};
+
 export interface ArticleControllerInboundPort {
   createArticle(
     params: CreateArticleInboundPortInputDto,
@@ -83,4 +97,8 @@ export interface ArticleControllerInboundPort {
   readAnArticle(
     params: ReadAnArticleInboundPortInputDto,
   ): Promise<ReadAnArticleInboundPortOutputDto>;
+
+  updateArticle(
+    params: UpdateArticleInboundPortInputDto,
+  ): Promise<UpdateArticleInboundPortOutputDto>;
 }

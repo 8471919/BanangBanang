@@ -7,12 +7,15 @@ import {
   ReadAnArticleInboundPortOutputDto,
   ReadArticlesInboundPortInputDto,
   ReadArticlesInboundPortOutputDto,
+  UpdateArticleInboundPortInputDto,
+  UpdateArticleInboundPortOutputDto,
 } from 'src/inbound-ports/article/article-controller.inbound-port';
 
 type MockArticleControllerInboundPortParamType = {
   createArticle?: CreateArticleInboundPortOutputDto;
   readArticles?: ReadArticlesInboundPortOutputDto;
   readAnArticle?: ReadAnArticleInboundPortOutputDto;
+  updateArticle?: UpdateArticleInboundPortOutputDto;
 };
 
 class MockArticleControllerInboundPort implements ArticleControllerInboundPort {
@@ -35,6 +38,11 @@ class MockArticleControllerInboundPort implements ArticleControllerInboundPort {
     params: ReadAnArticleInboundPortInputDto,
   ): Promise<ReadAnArticleInboundPortOutputDto> {
     return this.result.readAnArticle;
+  }
+  async updateArticle(
+    params: UpdateArticleInboundPortInputDto,
+  ): Promise<UpdateArticleInboundPortOutputDto> {
+    return this.result.updateArticle;
   }
 }
 
@@ -188,5 +196,31 @@ describe('ArticleController Spec', () => {
     const res = await articleController.readAnArticle(articleId);
 
     expect(res).toStrictEqual(article);
+  });
+
+  test('Update Article', async () => {
+    const affected: UpdateArticleInboundPortOutputDto = {
+      affected: 1,
+    };
+
+    const body: Omit<UpdateArticleInboundPortInputDto, 'articleId' | 'userId'> =
+      {
+        title: 'test update title',
+        content: 'test update content',
+        articleAreaId: 1,
+        articleTypeId: 1,
+      };
+
+    const articleId = '1';
+
+    const articleController = new ArticleController(
+      new MockArticleControllerInboundPort({ updateArticle: affected }),
+    );
+
+    const res = await articleController.updateArticle(articleId, body, {
+      id: '1',
+    });
+
+    expect(res).toStrictEqual({ affected: 1 });
   });
 });

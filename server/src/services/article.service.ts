@@ -9,6 +9,8 @@ import {
   ReadAnArticleInboundPortOutputDto,
   ReadArticlesInboundPortInputDto,
   ReadArticlesInboundPortOutputDto,
+  UpdateArticleInboundPortInputDto,
+  UpdateArticleInboundPortOutputDto,
 } from 'src/inbound-ports/article/article-controller.inbound-port';
 import {
   ArticleRepositoryOutboundPort,
@@ -74,5 +76,30 @@ export class ArticleService implements ArticleControllerInboundPort {
     return this.articleRepositoryOutboundPort.findOneArticle({
       articleId: params.articleId,
     });
+  }
+
+  async updateArticle(
+    params: UpdateArticleInboundPortInputDto,
+  ): Promise<UpdateArticleInboundPortOutputDto> {
+    if (params.articleTypeId === ARTICLE_TYPE.COMMON) {
+      return this.articleRepositoryOutboundPort.updateCommonArticle(params);
+    }
+
+    if (params.articleTypeId === ARTICLE_TYPE.JOB_POSTING) {
+      if (!params.companyName || !params.expirationDate) {
+        throw new BadRequestException(ERROR_MESSAGE.FAIL_TO_JOB_POSTING);
+      }
+
+      return this.articleRepositoryOutboundPort.updateJobPosting({
+        userId: params.userId,
+        articleId: params.articleId,
+        title: params.title,
+        content: params.content,
+        articleAreaId: params.articleAreaId,
+        articleTypeId: params.articleTypeId,
+        companyName: params.companyName,
+        expirationDate: params.expirationDate,
+      });
+    }
   }
 }
