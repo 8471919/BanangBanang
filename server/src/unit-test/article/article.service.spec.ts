@@ -10,6 +10,8 @@ import {
   FindAllArticlesOutboundPortOutputDto,
   FindOneArticleOutboundPortInputDto,
   FindOneArticleOutboundPortOutputDto,
+  RemoveArticleOutboundPortInputDto,
+  RemoveArticleOutboundPortOutputDto,
   SaveCommonArticleOutboundPortInputDto,
   SaveCommonArticleOutboundPortOutputDto,
   SaveJobPostingOutboundPortOutputDto,
@@ -28,6 +30,7 @@ type MockArticleRepositoryOutboundPortParamType = {
   findOneArticle?: FindOneArticleOutboundPortOutputDto;
   updateCommonArticle?: UpdateCommonArticleOutboundPortOutputDto;
   updateJobPosting?: UpdateJobPostingOutboundPortOutputDto;
+  removeArticle?: RemoveArticleOutboundPortOutputDto;
 };
 
 class MockArticleRepositoryOutboundPort
@@ -67,6 +70,11 @@ class MockArticleRepositoryOutboundPort
     params: UpdateJobPostingOutboundPortInputDto,
   ): Promise<UpdateJobPostingOutboundPortOutputDto> {
     return this.result.updateJobPosting;
+  }
+  async removeArticle(
+    params: RemoveArticleOutboundPortInputDto,
+  ): Promise<RemoveArticleOutboundPortOutputDto> {
+    return this.result.removeArticle;
   }
 }
 
@@ -275,6 +283,22 @@ describe('ArticleService Spec', () => {
     );
 
     const res = await articleService.updateArticle(article);
+
+    expect(res).toStrictEqual({ affected: 1 });
+  });
+
+  test('Remove Article', async () => {
+    const affected: RemoveArticleOutboundPortOutputDto = {
+      affected: 1,
+    };
+
+    const articleId = '1';
+
+    const articleService = new ArticleService(
+      new MockArticleRepositoryOutboundPort({ removeArticle: affected }),
+    );
+
+    const res = await articleService.removeArticle({ articleId, userId: '1' });
 
     expect(res).toStrictEqual({ affected: 1 });
   });
