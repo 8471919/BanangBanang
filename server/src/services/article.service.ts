@@ -9,6 +9,8 @@ import {
   ReadAnArticleInboundPortOutputDto,
   ReadArticlesInboundPortInputDto,
   ReadArticlesInboundPortOutputDto,
+  RemoveArticleInboundPortInputDto,
+  RemoveArticleInboundPortOutputDto,
   UpdateArticleInboundPortInputDto,
   UpdateArticleInboundPortOutputDto,
 } from 'src/inbound-ports/article/article-controller.inbound-port';
@@ -101,5 +103,16 @@ export class ArticleService implements ArticleControllerInboundPort {
         expirationDate: params.expirationDate,
       });
     }
+  }
+
+  async removeArticle(
+    params: RemoveArticleInboundPortInputDto,
+  ): Promise<RemoveArticleInboundPortOutputDto> {
+    const article = await this.articleRepositoryOutboundPort.removeArticle({
+      userId: params.userId,
+      articleId: params.articleId,
+    });
+
+    return { affected: article?.affected };
   }
 }

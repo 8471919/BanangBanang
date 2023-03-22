@@ -85,6 +85,13 @@ export type UpdateArticleInboundPortOutputDto = {
   affected: number | undefined;
 };
 
+export type RemoveArticleInboundPortInputDto = {
+  userId: string;
+  articleId: string;
+};
+export type RemoveArticleInboundPortOutputDto = {
+  affected: number | undefined;
+};
 export interface ArticleControllerInboundPort {
   createArticle(
     params: CreateArticleInboundPortInputDto,
@@ -101,4 +108,8 @@ export interface ArticleControllerInboundPort {
   updateArticle(
     params: UpdateArticleInboundPortInputDto,
   ): Promise<UpdateArticleInboundPortOutputDto>;
+
+  removeArticle(
+    params: RemoveArticleInboundPortInputDto,
+  ): Promise<RemoveArticleInboundPortOutputDto>;
 }

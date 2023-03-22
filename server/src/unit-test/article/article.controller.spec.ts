@@ -7,6 +7,8 @@ import {
   ReadAnArticleInboundPortOutputDto,
   ReadArticlesInboundPortInputDto,
   ReadArticlesInboundPortOutputDto,
+  RemoveArticleInboundPortInputDto,
+  RemoveArticleInboundPortOutputDto,
   UpdateArticleInboundPortInputDto,
   UpdateArticleInboundPortOutputDto,
 } from 'src/inbound-ports/article/article-controller.inbound-port';
@@ -16,6 +18,7 @@ type MockArticleControllerInboundPortParamType = {
   readArticles?: ReadArticlesInboundPortOutputDto;
   readAnArticle?: ReadAnArticleInboundPortOutputDto;
   updateArticle?: UpdateArticleInboundPortOutputDto;
+  removeArticle?: RemoveArticleInboundPortOutputDto;
 };
 
 class MockArticleControllerInboundPort implements ArticleControllerInboundPort {
@@ -43,6 +46,11 @@ class MockArticleControllerInboundPort implements ArticleControllerInboundPort {
     params: UpdateArticleInboundPortInputDto,
   ): Promise<UpdateArticleInboundPortOutputDto> {
     return this.result.updateArticle;
+  }
+  async removeArticle(
+    params: RemoveArticleInboundPortInputDto,
+  ): Promise<RemoveArticleInboundPortOutputDto> {
+    return this.result.removeArticle;
   }
 }
 
@@ -220,6 +228,22 @@ describe('ArticleController Spec', () => {
     const res = await articleController.updateArticle(articleId, body, {
       id: '1',
     });
+
+    expect(res).toStrictEqual({ affected: 1 });
+  });
+
+  test('Remove Article', async () => {
+    const affected: RemoveArticleInboundPortOutputDto = {
+      affected: 1,
+    };
+
+    const articleId = '1';
+
+    const articleController = new ArticleController(
+      new MockArticleControllerInboundPort({ removeArticle: affected }),
+    );
+
+    const res = await articleController.deleteArticle(articleId, { id: '1' });
 
     expect(res).toStrictEqual({ affected: 1 });
   });
