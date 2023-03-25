@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicantController } from 'src/controllers/applicant.controller';
-import { JobPostingApplicantEntity } from 'src/entities/article/job-posting-applicant.entity';
+import { ApplicantEntity } from 'src/entities/applicant/applicant.entity';
 import { APPLICANT_CONTROLLER_INBOUND_PORT } from 'src/inbound-ports/applicant/applicant-controller.inbound-port';
-import { JOB_POSTING_APPLICANT_REPOSITORy_OUTBOUND_PORT } from 'src/outbound-ports/applicant/job-posting-appicant-repository.outbound-port';
-import { JobPostingApplicantRepository } from 'src/repositories/job-posting-applicant.repository';
+import { APPLICANT_REPOSITORY_OUTBOUND_PORT } from 'src/outbound-ports/applicant/applicant-repository.outbound-port.ts';
+import { ApplicantRepository } from 'src/repositories/applicant.repository.ts';
 import { ApplicantService } from 'src/services/applicant.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([JobPostingApplicantEntity])],
+  imports: [TypeOrmModule.forFeature([ApplicantEntity])],
   controllers: [ApplicantController],
   providers: [
     {
@@ -16,8 +16,8 @@ import { ApplicantService } from 'src/services/applicant.service';
       useClass: ApplicantService,
     },
     {
-      provide: JOB_POSTING_APPLICANT_REPOSITORy_OUTBOUND_PORT,
-      useClass: JobPostingApplicantRepository,
+      provide: APPLICANT_REPOSITORY_OUTBOUND_PORT,
+      useClass: ApplicantRepository,
     },
     ApplicantService,
   ],
