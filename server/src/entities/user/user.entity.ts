@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 import { ArticleEntity } from '../article/article.entity';
+import { ApplicantEntity } from '../applicant/applicant.entity';
 import { CommentEntity } from '../comment/comment.entity';
 import { CommonBigPKEntity } from '../common/common.entity';
 
@@ -19,4 +20,7 @@ export class UserEntity extends CommonBigPKEntity {
 
   @OneToMany(() => CommentEntity, (comments) => comments.user)
   comments: CommentEntity[];
+
+  @OneToMany(() => ApplicantEntity, (applicant) => applicant.user)
+  jobApplicants: ApplicantEntity[];
 }
