@@ -1,4 +1,30 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Inject, Post } from '@nestjs/common';
+import { Users } from 'src/decorators/user.decorator';
+import { GetUserIdDto } from 'src/dtos/auth/get.user-id.dto';
+import {
+  ApplicantControllerInboundPort,
+  APPLICANT_CONTROLLER_INBOUND_PORT,
+  CreateJobPostingApplicantInboundPortInputDto,
+} from 'src/inbound-ports/applicant/applicant-controller.inbound-port';
 
 @Controller('api/applicants')
-export class ApplicantController {}
+export class ApplicantController {
+  constructor(
+    @Inject(APPLICANT_CONTROLLER_INBOUND_PORT)
+    private readonly applicantControllerInbountPort: ApplicantControllerInboundPort,
+  ) {}
+
+  @Post()
+  async createJobPostingApplicant(
+    @Users() user: GetUserIdDto,
+    @Body() body: CreateJobPostingApplicantInboundPortInputDto,
+  ) {
+    await this.applicantControllerInbountPort.createJobPostingApplicant({
+      articleId: body.articleId,
+      birth: body.birth,
+      content: body.content,
+      name: body.name,
+      userId: user.id,
+    });
+  }
+}
