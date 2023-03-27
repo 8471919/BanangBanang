@@ -19,7 +19,7 @@ import { ApplicantModule } from './modules/applicant.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         retryAttempts: configService.get('NODE_ENV') === 'prod' ? 10 : 1,
-        type: 'postgres',
+        type: 'mysql',
         host: configService.get('DB_HOST'),
         port: Number(configService.get('DB_PORT')),
         database: configService.get('DB_NAME'),
