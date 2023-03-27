@@ -11,7 +11,7 @@ import { CommonBigPKEntity } from '../common/common.entity';
 import { UserEntity } from '../user/user.entity';
 import { ArticleAreaEntity } from './article-area.entity';
 import { ArticleTypeEntity } from './article-type.entity';
-import { JobPostingApplicantEntity } from './job-posting-applicant.entity';
+import { ApplicantEntity } from '../applicant/applicant.entity';
 import { JobPostingExtendArticleEntity } from './job-posting-extend-article.entity';
 
 @Entity('ARTICLE')
@@ -53,9 +53,6 @@ export class ArticleEntity extends CommonBigPKEntity {
   )
   jobPosting: JobPostingExtendArticleEntity;
 
-  @OneToMany(
-    () => JobPostingApplicantEntity,
-    (jobApplicant) => jobApplicant.article,
-  )
-  jobApplicants: JobPostingApplicantEntity[];
+  @OneToMany(() => ApplicantEntity, (applicant) => applicant.article)
+  jobApplicants: ApplicantEntity[];
 }

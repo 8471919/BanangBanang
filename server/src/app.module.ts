@@ -7,6 +7,7 @@ import { UserModule } from './modules/user.module';
 import { AuthModule } from './modules/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ArticleModule } from './modules/article.module';
+import { ApplicantModule } from './modules/applicant.module';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { ArticleModule } from './modules/article.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         retryAttempts: configService.get('NODE_ENV') === 'prod' ? 10 : 1,
-        type: 'postgres',
+        type: 'mysql',
         host: configService.get('DB_HOST'),
         port: Number(configService.get('DB_PORT')),
         database: configService.get('DB_NAME'),
@@ -33,6 +34,7 @@ import { ArticleModule } from './modules/article.module';
     UserModule,
     AuthModule,
     ArticleModule,
+    ApplicantModule,
   ],
   controllers: [AppController],
   providers: [AppService],
