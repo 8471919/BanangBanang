@@ -16,6 +16,20 @@ export class ApplicantController {
     private readonly applicantControllerInbountPort: ApplicantControllerInboundPort,
   ) {}
 
+  @ApiOperation({
+    summary: '공고 지원 API',
+    description: '게시글 id에 해당하는 공고에 해당하는 지원자 데이터 생성',
+  })
+  @ApiBody({
+    schema: {
+      properties: {
+        articleId: { default: 2 },
+        birth: { default: '2000-01-01' },
+        content: { default: '지원 내용' },
+        name: { default: '김비빔' },
+      },
+    },
+  })
   @UseGuards(LoggedInGuard)
   @Post()
   async createJobPostingApplicant(
