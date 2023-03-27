@@ -36,7 +36,7 @@ export class ApplicantController {
     @Users() user: GetUserIdDto,
     @Body() body: CreateJobPostingApplicantInboundPortInputDto,
   ) {
-    await this.applicantControllerInbountPort.createJobPostingApplicant({
+    return await this.applicantControllerInbountPort.createJobPostingApplicant({
       articleId: body.articleId,
       birth: body.birth,
       content: body.content,
