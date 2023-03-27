@@ -1,4 +1,6 @@
-import { Body, Controller, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Inject, Post, UseGuards } from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiProperty } from '@nestjs/swagger';
+import { LoggedInGuard } from 'src/auth/guard/logged-in.guard';
 import { Users } from 'src/decorators/user.decorator';
 import { GetUserIdDto } from 'src/dtos/auth/get.user-id.dto';
 import {
@@ -14,6 +16,7 @@ export class ApplicantController {
     private readonly applicantControllerInbountPort: ApplicantControllerInboundPort,
   ) {}
 
+  @UseGuards(LoggedInGuard)
   @Post()
   async createJobPostingApplicant(
     @Users() user: GetUserIdDto,
