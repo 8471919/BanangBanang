@@ -1,9 +1,18 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { CommentEntity } from '../comment/comment.entity';
 import { CommonBigPKEntity } from '../common/common.entity';
 import { UserEntity } from '../user/user.entity';
 import { ArticleAreaEntity } from './article-area.entity';
 import { ArticleTypeEntity } from './article-type.entity';
+import { ApplicantEntity } from '../applicant/applicant.entity';
+import { JobPostingExtendArticleEntity } from './job-posting-extend-article.entity';
 
 @Entity('ARTICLE')
 export class ArticleEntity extends CommonBigPKEntity {
@@ -36,4 +45,14 @@ export class ArticleEntity extends CommonBigPKEntity {
 
   @OneToMany(() => CommentEntity, (comments) => comments.article)
   comments: CommentEntity[];
+
+  @OneToOne(
+    () => JobPostingExtendArticleEntity,
+    (jobPosting) => jobPosting.article,
+    { cascade: true },
+  )
+  jobPosting: JobPostingExtendArticleEntity;
+
+  @OneToMany(() => ApplicantEntity, (applicant) => applicant.article)
+  jobApplicants: ApplicantEntity[];
 }
