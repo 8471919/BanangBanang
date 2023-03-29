@@ -92,6 +92,22 @@ export type RemoveArticleInboundPortInputDto = {
 export type RemoveArticleInboundPortOutputDto = {
   affected: number | undefined;
 };
+
+export type ReadApplicantsByArticleIdInboundPortInputDto = {
+  articleId: string;
+  userId: string;
+};
+export type ReadApplicantsByArticleIdInboundPortOutputDto = {
+  applicants: Array<{
+    id: string;
+    name: string;
+    birth: Date;
+    content: string;
+    userId: string;
+    applicantTypeId: number;
+  }>;
+};
+
 export interface ArticleControllerInboundPort {
   createArticle(
     params: CreateArticleInboundPortInputDto,
@@ -112,4 +128,8 @@ export interface ArticleControllerInboundPort {
   removeArticle(
     params: RemoveArticleInboundPortInputDto,
   ): Promise<RemoveArticleInboundPortOutputDto>;
+
+  readApplicantsByArticleId(
+    params: ReadApplicantsByArticleIdInboundPortInputDto,
+  ): Promise<ReadApplicantsByArticleIdInboundPortOutputDto>;
 }
