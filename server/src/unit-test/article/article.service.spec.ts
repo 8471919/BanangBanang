@@ -4,6 +4,7 @@ import {
   CreateArticleInboundPortInputDto,
   ReadArticlesInboundPortInputDto,
 } from 'src/inbound-ports/article/article-controller.inbound-port';
+import { FindApplicantsByArticleIdOutboundPortOutputDto } from 'src/outbound-ports/applicant/applicant-repository.outbound-port.ts';
 import {
   ArticleRepositoryOutboundPort,
   FindAllArticlesOutboundPortInputDto,
@@ -309,5 +310,34 @@ describe('ArticleService Spec', () => {
     const res = await articleService.removeArticle({ articleId, userId: '1' });
 
     expect(res).toStrictEqual({ affected: 1 });
+  });
+
+  test('Read Applicants By Article Id', async () => {
+    const applicants: FindApplicantsByArticleIdOutboundPortOutputDto = {
+      applicants: [
+        {
+          id: '1',
+          name: 'test applicant',
+          birth: new Date('2000-01-01'),
+          content: 'test applying content',
+          userId: '2',
+          applicantTypeId: 1,
+        },
+      ],
+    };
+
+    const articleService = new ArticleService(
+      new MockArticleRepositoryOutboundPort({}),
+      new MockApplicantRepositoryOutboundPort({
+        findApplicantsByArticleId: applicants,
+      }),
+    );
+
+    const res = await articleService.readApplicantsByArticleId({
+      articleId: '1',
+      userId: '2',
+    });
+
+    expect(res).toStrictEqual(applicants);
   });
 });
