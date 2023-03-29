@@ -1,3 +1,5 @@
+import { ArticleEntity } from 'src/entities/article/article.entity';
+
 export const ARTICLE_CONTROLLER_INBOUNT_PORT =
   'ARTICLE_CONTROLLER_INBOUNT_PORT' as const;
 

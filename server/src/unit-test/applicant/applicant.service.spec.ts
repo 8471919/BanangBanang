@@ -1,5 +1,7 @@
 import {
   ApplicantRepositoryOutboundPort,
+  FindApplicantsByArticleIdOutboundPortInputDto,
+  FindApplicantsByArticleIdOutboundPortOutputDto,
   SaveJobPostingApplicantOutboundPortInputDto,
   SaveJobPostingApplicantOutboundPortOutputDto,
 } from 'src/outbound-ports/applicant/applicant-repository.outbound-port.ts';
@@ -7,9 +9,10 @@ import { ApplicantService } from 'src/services/applicant.service';
 
 type MockApplicantRepositoryOutboundPortParamType = {
   saveJobPostingApplicant?: SaveJobPostingApplicantOutboundPortOutputDto;
+  findApplicantsByArticleId?: FindApplicantsByArticleIdOutboundPortOutputDto;
 };
 
-class MockApplicantRepositoryOutboundPort
+export class MockApplicantRepositoryOutboundPort
   implements ApplicantRepositoryOutboundPort
 {
   private readonly result: MockApplicantRepositoryOutboundPortParamType;
@@ -22,6 +25,11 @@ class MockApplicantRepositoryOutboundPort
     params: SaveJobPostingApplicantOutboundPortInputDto,
   ): Promise<SaveJobPostingApplicantOutboundPortOutputDto> {
     return this.result.saveJobPostingApplicant;
+  }
+  async findApplicantsByArticleId(
+    params: FindApplicantsByArticleIdOutboundPortInputDto,
+  ): Promise<FindApplicantsByArticleIdOutboundPortOutputDto> {
+    return this.result.findApplicantsByArticleId;
   }
 }
 

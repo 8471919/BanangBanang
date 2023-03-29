@@ -22,6 +22,7 @@ import {
   UpdateJobPostingOutboundPortOutputDto,
 } from 'src/outbound-ports/article/article-repository.outbound-port';
 import { ArticleService } from 'src/services/article.service';
+import { MockApplicantRepositoryOutboundPort } from '../applicant/applicant.service.spec';
 
 type MockArticleRepositoryOutboundPortParamType = {
   saveCommonArticle?: SaveCommonArticleOutboundPortOutputDto;
@@ -92,6 +93,7 @@ describe('ArticleService Spec', () => {
       new MockArticleRepositoryOutboundPort({
         saveCommonArticle: { articleId: '1' },
       }),
+      new MockApplicantRepositoryOutboundPort({}),
     );
 
     const res = await articleService.createArticle(article);
@@ -114,6 +116,7 @@ describe('ArticleService Spec', () => {
       new MockArticleRepositoryOutboundPort({
         saveJogPosting: { articleId: '1' },
       }),
+      new MockApplicantRepositoryOutboundPort({}),
     );
 
     const res = await articleService.createArticle(article);
@@ -197,6 +200,7 @@ describe('ArticleService Spec', () => {
       new MockArticleRepositoryOutboundPort({
         findAllArticles: { articles, articleCount: articles.length },
       }),
+      new MockApplicantRepositoryOutboundPort({}),
     );
 
     const res = await articleService.readArticles(params);
@@ -236,6 +240,7 @@ describe('ArticleService Spec', () => {
 
     const articleService = new ArticleService(
       new MockArticleRepositoryOutboundPort({ findOneArticle: article }),
+      new MockApplicantRepositoryOutboundPort({}),
     );
 
     const res = await articleService.readAnArticle({ articleId: articleId });
@@ -257,6 +262,7 @@ describe('ArticleService Spec', () => {
       new MockArticleRepositoryOutboundPort({
         updateCommonArticle: { affected: 1 },
       }),
+      new MockApplicantRepositoryOutboundPort({}),
     );
 
     const res = await articleService.updateArticle(article);
@@ -280,6 +286,7 @@ describe('ArticleService Spec', () => {
       new MockArticleRepositoryOutboundPort({
         updateJobPosting: { affected: 1 },
       }),
+      new MockApplicantRepositoryOutboundPort({}),
     );
 
     const res = await articleService.updateArticle(article);
@@ -296,6 +303,7 @@ describe('ArticleService Spec', () => {
 
     const articleService = new ArticleService(
       new MockArticleRepositoryOutboundPort({ removeArticle: affected }),
+      new MockApplicantRepositoryOutboundPort({}),
     );
 
     const res = await articleService.removeArticle({ articleId, userId: '1' });

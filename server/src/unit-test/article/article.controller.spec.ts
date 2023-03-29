@@ -5,6 +5,8 @@ import {
   CreateArticleInboundPortOutputDto,
   ReadAnArticleInboundPortInputDto,
   ReadAnArticleInboundPortOutputDto,
+  ReadApplicantsByArticleIdInboundPortInputDto,
+  ReadApplicantsByArticleIdInboundPortOutputDto,
   ReadArticlesInboundPortInputDto,
   ReadArticlesInboundPortOutputDto,
   RemoveArticleInboundPortInputDto,
@@ -19,6 +21,7 @@ type MockArticleControllerInboundPortParamType = {
   readAnArticle?: ReadAnArticleInboundPortOutputDto;
   updateArticle?: UpdateArticleInboundPortOutputDto;
   removeArticle?: RemoveArticleInboundPortOutputDto;
+  readApplicantsByArticleId?: ReadApplicantsByArticleIdInboundPortOutputDto;
 };
 
 class MockArticleControllerInboundPort implements ArticleControllerInboundPort {
@@ -51,6 +54,11 @@ class MockArticleControllerInboundPort implements ArticleControllerInboundPort {
     params: RemoveArticleInboundPortInputDto,
   ): Promise<RemoveArticleInboundPortOutputDto> {
     return this.result.removeArticle;
+  }
+  async readApplicantsByArticleId(
+    params: ReadApplicantsByArticleIdInboundPortInputDto,
+  ): Promise<ReadApplicantsByArticleIdInboundPortOutputDto> {
+    return this.result.readApplicantsByArticleId;
   }
 }
 
@@ -246,5 +254,32 @@ describe('ArticleController Spec', () => {
     const res = await articleController.deleteArticle(articleId, { id: '1' });
 
     expect(res).toStrictEqual({ affected: 1 });
+  });
+
+  test('Read Applicants By Article Id', async () => {
+    const applicants: ReadApplicantsByArticleIdInboundPortOutputDto = {
+      applicants: [
+        {
+          id: '1',
+          name: 'test applicant',
+          birth: new Date('2000-01-01'),
+          content: 'test applying content',
+          userId: '2',
+          applicantTypeId: 1,
+        },
+      ],
+    };
+
+    const articleController = new ArticleController(
+      new MockArticleControllerInboundPort({
+        readApplicantsByArticleId: applicants,
+      }),
+    );
+
+    const res = await articleController.readApplicantsByArticleId('2', {
+      id: '2',
+    });
+
+    expect(res).toStrictEqual(applicants);
   });
 });
