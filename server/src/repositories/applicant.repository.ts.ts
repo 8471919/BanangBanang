@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ApplicantEntity } from 'src/entities/applicant/applicant.entity';
 import {
   ApplicantRepositoryOutboundPort,
+  FindApplicantsByArticleIdOutboundPortInputDto,
+  FindApplicantsByArticleIdOutboundPortOutputDto,
   SaveJobPostingApplicantOutboundPortInputDto,
   SaveJobPostingApplicantOutboundPortOutputDto,
 } from 'src/outbound-ports/applicant/applicant-repository.outbound-port.ts';
@@ -28,5 +30,20 @@ export class ApplicantRepository implements ApplicantRepositoryOutboundPort {
     });
 
     return { applicant };
+  }
+
+  async findApplicantsByArticleId(
+    params: FindApplicantsByArticleIdOutboundPortInputDto,
+  ): Promise<FindApplicantsByArticleIdOutboundPortOutputDto> {
+    const applicants = await this.applicantRepository
+      .createQueryBuilder('ap')
+      .select()
+      .where('ap.articleId = :articleId', { articleId: params.articleId })
+      .innerJoinAndSelect('ap.article', 'a', `a.userId = ${params.userId}`)
+      .getMany();
+
+    console.log(applicants);
+
+    return { applicants };
   }
 }

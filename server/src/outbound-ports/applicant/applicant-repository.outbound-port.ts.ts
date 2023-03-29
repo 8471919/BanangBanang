@@ -18,8 +18,27 @@ export type SaveJobPostingApplicantOutboundPortOutputDto = {
   };
 };
 
+export type FindApplicantsByArticleIdOutboundPortInputDto = {
+  articleId: string;
+  userId: string;
+};
+export type FindApplicantsByArticleIdOutboundPortOutputDto = {
+  applicants: Array<{
+    id: string;
+    name: string;
+    birth: Date;
+    content: string;
+    userId: string;
+    applicantTypeId: number;
+  }>;
+};
+
 export interface ApplicantRepositoryOutboundPort {
   saveJobPostingApplicant(
     params: SaveJobPostingApplicantOutboundPortInputDto,
   ): Promise<SaveJobPostingApplicantOutboundPortOutputDto>;
+
+  findApplicantsByArticleId(
+    params: FindApplicantsByArticleIdOutboundPortInputDto,
+  ): Promise<FindApplicantsByArticleIdOutboundPortOutputDto>;
 }
