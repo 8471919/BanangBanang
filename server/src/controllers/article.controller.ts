@@ -122,6 +122,15 @@ export class ArticleController {
     return this.articleControllerInboundPort.readAnArticle({ articleId: id });
   }
 
+  @ApiOperation({
+    summary: '게시글 공고의 지원자 조회 api',
+    description: '게시글 id로 해당 게시글 공고의 지원자 조회',
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: '게시글 id',
+  })
   @UseGuards(LoggedInGuard)
   @Get(':id/applicants')
   async readApplicantsByArticleId(
