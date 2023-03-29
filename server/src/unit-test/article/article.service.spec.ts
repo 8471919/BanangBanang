@@ -4,6 +4,7 @@ import {
   CreateArticleInboundPortInputDto,
   ReadArticlesInboundPortInputDto,
 } from 'src/inbound-ports/article/article-controller.inbound-port';
+import { FindApplicantsByArticleIdOutboundPortOutputDto } from 'src/outbound-ports/applicant/applicant-repository.outbound-port.ts';
 import {
   ArticleRepositoryOutboundPort,
   FindAllArticlesOutboundPortInputDto,
@@ -22,6 +23,7 @@ import {
   UpdateJobPostingOutboundPortOutputDto,
 } from 'src/outbound-ports/article/article-repository.outbound-port';
 import { ArticleService } from 'src/services/article.service';
+import { MockApplicantRepositoryOutboundPort } from '../applicant/applicant.service.spec';
 
 type MockArticleRepositoryOutboundPortParamType = {
   saveCommonArticle?: SaveCommonArticleOutboundPortOutputDto;
@@ -92,6 +94,7 @@ describe('ArticleService Spec', () => {
       new MockArticleRepositoryOutboundPort({
         saveCommonArticle: { articleId: '1' },
       }),
+      new MockApplicantRepositoryOutboundPort({}),
     );
 
     const res = await articleService.createArticle(article);
@@ -114,6 +117,7 @@ describe('ArticleService Spec', () => {
       new MockArticleRepositoryOutboundPort({
         saveJogPosting: { articleId: '1' },
       }),
+      new MockApplicantRepositoryOutboundPort({}),
     );
 
     const res = await articleService.createArticle(article);
@@ -197,6 +201,7 @@ describe('ArticleService Spec', () => {
       new MockArticleRepositoryOutboundPort({
         findAllArticles: { articles, articleCount: articles.length },
       }),
+      new MockApplicantRepositoryOutboundPort({}),
     );
 
     const res = await articleService.readArticles(params);
@@ -236,6 +241,7 @@ describe('ArticleService Spec', () => {
 
     const articleService = new ArticleService(
       new MockArticleRepositoryOutboundPort({ findOneArticle: article }),
+      new MockApplicantRepositoryOutboundPort({}),
     );
 
     const res = await articleService.readAnArticle({ articleId: articleId });
@@ -257,6 +263,7 @@ describe('ArticleService Spec', () => {
       new MockArticleRepositoryOutboundPort({
         updateCommonArticle: { affected: 1 },
       }),
+      new MockApplicantRepositoryOutboundPort({}),
     );
 
     const res = await articleService.updateArticle(article);
@@ -280,6 +287,7 @@ describe('ArticleService Spec', () => {
       new MockArticleRepositoryOutboundPort({
         updateJobPosting: { affected: 1 },
       }),
+      new MockApplicantRepositoryOutboundPort({}),
     );
 
     const res = await articleService.updateArticle(article);
@@ -296,10 +304,40 @@ describe('ArticleService Spec', () => {
 
     const articleService = new ArticleService(
       new MockArticleRepositoryOutboundPort({ removeArticle: affected }),
+      new MockApplicantRepositoryOutboundPort({}),
     );
 
     const res = await articleService.removeArticle({ articleId, userId: '1' });
 
     expect(res).toStrictEqual({ affected: 1 });
+  });
+
+  test('Read Applicants By Article Id', async () => {
+    const applicants: FindApplicantsByArticleIdOutboundPortOutputDto = {
+      applicants: [
+        {
+          id: '1',
+          name: 'test applicant',
+          birth: new Date('2000-01-01'),
+          content: 'test applying content',
+          userId: '2',
+          applicantTypeId: 1,
+        },
+      ],
+    };
+
+    const articleService = new ArticleService(
+      new MockArticleRepositoryOutboundPort({}),
+      new MockApplicantRepositoryOutboundPort({
+        findApplicantsByArticleId: applicants,
+      }),
+    );
+
+    const res = await articleService.readApplicantsByArticleId({
+      articleId: '1',
+      userId: '2',
+    });
+
+    expect(res).toStrictEqual(applicants);
   });
 });

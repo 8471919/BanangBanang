@@ -38,6 +38,8 @@ export class ArticleController {
     private readonly articleControllerInboundPort: ArticleControllerInboundPort,
   ) {}
 
+  //NOTE: Create
+
   @ApiOperation({
     summary: '게시글 작성 api',
     description: 'articleTypeId에 따라 다른 게시글 생성',
@@ -64,6 +66,8 @@ export class ArticleController {
     console.log('create article controller');
     return await this.articleControllerInboundPort.createArticle(body);
   }
+
+  // NOTE: Read
 
   // 게시글을 타입, 지역 별로 가져올 수도 있어야 한다.
   @ApiOperation({
@@ -119,6 +123,27 @@ export class ArticleController {
   }
 
   @ApiOperation({
+    summary: '게시글 공고의 지원자 조회 api',
+    description: '게시글 id로 해당 게시글 공고의 지원자 조회',
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: '게시글 id',
+  })
+  @UseGuards(LoggedInGuard)
+  @Get(':id/applicants')
+  async readApplicantsByArticleId(
+    @Param('id') articleId: string,
+    @Users() user: GetUserIdDto,
+  ) {
+    const params = { articleId, userId: user.id };
+
+    return this.articleControllerInboundPort.readApplicantsByArticleId(params);
+  }
+
+  // NOTE: Update
+  @ApiOperation({
     summary: '게시글 수정 api',
     description: '게시글 id로 해당 게시글 수정',
   })
@@ -156,6 +181,8 @@ export class ArticleController {
       articleId: articleId,
     });
   }
+
+  // NOTE: Delete
 
   @ApiOperation({
     summary: '게시글 삭제 api',

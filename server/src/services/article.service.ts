@@ -7,6 +7,8 @@ import {
   CreateArticleInboundPortOutputDto,
   ReadAnArticleInboundPortInputDto,
   ReadAnArticleInboundPortOutputDto,
+  ReadApplicantsByArticleIdInboundPortInputDto,
+  ReadApplicantsByArticleIdInboundPortOutputDto,
   ReadArticlesInboundPortInputDto,
   ReadArticlesInboundPortOutputDto,
   RemoveArticleInboundPortInputDto,
@@ -14,6 +16,10 @@ import {
   UpdateArticleInboundPortInputDto,
   UpdateArticleInboundPortOutputDto,
 } from 'src/inbound-ports/article/article-controller.inbound-port';
+import {
+  ApplicantRepositoryOutboundPort,
+  APPLICANT_REPOSITORY_OUTBOUND_PORT,
+} from 'src/outbound-ports/applicant/applicant-repository.outbound-port.ts';
 import {
   ArticleRepositoryOutboundPort,
   ARTICLE_REPOSITORY_OUTBOUND_PORT,
@@ -24,6 +30,9 @@ export class ArticleService implements ArticleControllerInboundPort {
   constructor(
     @Inject(ARTICLE_REPOSITORY_OUTBOUND_PORT)
     private readonly articleRepositoryOutboundPort: ArticleRepositoryOutboundPort,
+
+    @Inject(APPLICANT_REPOSITORY_OUTBOUND_PORT)
+    private readonly applicantRepositoryOutboundPort: ApplicantRepositoryOutboundPort,
   ) {}
 
   async createArticle(
@@ -114,5 +123,13 @@ export class ArticleService implements ArticleControllerInboundPort {
     });
 
     return { affected: article?.affected };
+  }
+
+  async readApplicantsByArticleId(
+    params: ReadApplicantsByArticleIdInboundPortInputDto,
+  ): Promise<ReadApplicantsByArticleIdInboundPortOutputDto> {
+    return this.applicantRepositoryOutboundPort.findApplicantsByArticleId(
+      params,
+    );
   }
 }
