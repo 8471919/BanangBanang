@@ -1,5 +1,5 @@
 import { Body, Controller, Inject, Post, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiProperty } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { LoggedInGuard } from 'src/auth/guard/logged-in.guard';
 import { Users } from 'src/decorators/user.decorator';
 import { GetUserIdDto } from 'src/dtos/auth/get.user-id.dto';
@@ -9,6 +9,7 @@ import {
   CreateJobPostingApplicantInboundPortInputDto,
 } from 'src/inbound-ports/applicant/applicant-controller.inbound-port';
 
+@ApiTags('지원자 API')
 @Controller('api/applicants')
 export class ApplicantController {
   constructor(
