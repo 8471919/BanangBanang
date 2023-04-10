@@ -19,8 +19,20 @@ export type SaveCommentOutboundPortOutputDto = Pick<
   | 'userId'
 >;
 
+export type FindCommentsByUserIdOutboundPortInputDto = {
+  userId: string;
+};
+export type FindCommentsByUserIdOutboundPortOutputDto = Pick<
+  CommentEntity,
+  'articleId' | 'content' | 'createdAt' | 'id' | 'userId' | 'updatedAt'
+>[];
+
 export interface CommentRepositoryOutboundPort {
   saveComment(
     params: SaveCommentOutboundPortInputDto,
   ): Promise<SaveCommentOutboundPortOutputDto>;
+
+  findCommentsByUserId(
+    params: FindCommentsByUserIdOutboundPortInputDto,
+  ): Promise<FindCommentsByUserIdOutboundPortOutputDto>;
 }
