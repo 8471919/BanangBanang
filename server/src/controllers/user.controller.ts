@@ -1,5 +1,5 @@
 import { Controller, Get, Inject, Param, UseGuards } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { LoggedInGuard } from 'src/auth/guard/logged-in.guard';
 import { Users } from 'src/decorators/user.decorator';
 import { GetUserIdDto } from 'src/dtos/auth/get.user-id.dto';
@@ -22,9 +22,22 @@ export class UserController {
   })
   @UseGuards(LoggedInGuard)
   @Get('info/comments')
-  async readCommentsByUserId(@Users() user: GetUserIdDto) {
+  async getOwnComments(@Users() user: GetUserIdDto) {
     const comments = await this.userControllerInboundPort.readCommentsByUserId({
       userId: user.id,
+    });
+    return comments;
+  }
+
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: '유저 id',
+  })
+  @Get(':userId/comments')
+  async readCommentsByUserId(@Param('userId') userId: string) {
+    const comments = await this.userControllerInboundPort.readCommentsByUserId({
+      userId: userId,
     });
     return comments;
   }
