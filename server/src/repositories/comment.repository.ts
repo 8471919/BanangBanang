@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CommentEntity } from 'src/entities/comment/comment.entity';
 import {
   CommentRepositoryOutboundPort,
+  FindCommentsByUserIdOutboundPortInputDto,
+  FindCommentsByUserIdOutboundPortOutputDto,
   SaveCommentOutboundPortInputDto,
   SaveCommentOutboundPortOutputDto,
 } from 'src/outbound-ports/comment/comment-repository.outbound-port';
@@ -21,5 +23,15 @@ export class CommentRepository implements CommentRepositoryOutboundPort {
     const comment = await this.commentRepository.save(params);
 
     return comment;
+  }
+
+  async findCommentsByUserId(
+    params: FindCommentsByUserIdOutboundPortInputDto,
+  ): Promise<FindCommentsByUserIdOutboundPortOutputDto> {
+    const comments = await this.commentRepository.findBy({
+      userId: params.userId,
+    });
+
+    return comments;
   }
 }
