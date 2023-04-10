@@ -17,7 +17,7 @@ import { hash } from 'bcrypt';
 import { ConfigServiceOutboundPort } from 'src/config/config-service.outbound-port';
 import { ConfigService } from '@nestjs/config';
 
-type MockUserRepositoryOutboundPortParamType = {
+export type MockUserRepositoryOutboundPortParamType = {
   findUserForLogIn?: FindUserForLogInOutboundPortOutputDto;
   findUserForDeserialize?: FindUserForDeserializeOutboundPortOPutputDto;
   findUserByEmail?: FindUserByEmailOutboundPortOutputDto;
@@ -25,7 +25,9 @@ type MockUserRepositoryOutboundPortParamType = {
   saveUser?: unknown;
   saveGoogleUser?: SaveGoogleUserOutboundPortOutputDto;
 };
-class MockUserRepositoryOutboundPort implements UserRepositoryOutboundPort {
+export class MockUserRepositoryOutboundPort
+  implements UserRepositoryOutboundPort
+{
   private readonly result: MockUserRepositoryOutboundPortParamType;
 
   constructor(result: MockUserRepositoryOutboundPortParamType) {
