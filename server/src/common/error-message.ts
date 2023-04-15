@@ -15,4 +15,9 @@ export const ERROR_MESSAGE = {
     code: 400,
     message: '게시글 삭제를 실패하였습니다.',
   },
+  //commentRepository
+  FAIL_TO_UPDATE_COMMENT: {
+    code: 400,
+    message: '댓글 수정을 실패하였습니다.',
+  },
 };
