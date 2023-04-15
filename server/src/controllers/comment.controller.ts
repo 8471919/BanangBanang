@@ -62,6 +62,11 @@ export class CommentController {
       },
     },
   })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: '댓글의 id',
+  })
   @UseGuards(LoggedInGuard)
   @Put(':id')
   async updateComment(
