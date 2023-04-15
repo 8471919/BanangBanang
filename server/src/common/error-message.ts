@@ -20,4 +20,8 @@ export const ERROR_MESSAGE = {
     code: 400,
     message: '댓글 수정을 실패하였습니다.',
   },
+  FAIL_TO_DELETE_COMMENT: {
+    code: 400,
+    message: '댓글 삭제에 실패하였습니다.',
+  },
 };
