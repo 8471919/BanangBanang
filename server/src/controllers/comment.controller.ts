@@ -1,6 +1,17 @@
-import { Body, Controller, Inject, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Inject,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LoggedInGuard } from 'src/auth/guard/logged-in.guard';
+import { Users } from 'src/decorators/user.decorator';
+import { GetUserIdDto } from 'src/dtos/auth/get.user-id.dto';
+import { UpdateCommentDto } from 'src/dtos/comment/update.comment.dto';
 import {
   COMMENT_CONTROLLER_INBOUND_PORT,
   CommentControllerInboundPort,
@@ -36,5 +47,20 @@ export class CommentController {
     const comment = await this.commentControllerInboundPort.createComment(body);
 
     return comment;
+  }
+
+  // NOTE: Update
+  @UseGuards(LoggedInGuard)
+  @Put(':id')
+  async updateComment(
+    @Users() user: GetUserIdDto,
+    @Param('id') id: string,
+    @Body() body: UpdateCommentDto,
+  ) {
+    return await this.commentControllerInboundPort.updateComment({
+      userId: user.id,
+      commentId: id,
+      content: body.content,
+    });
   }
 }

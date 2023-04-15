@@ -3,6 +3,8 @@ import {
   CommentControllerInboundPort,
   CreateCommentInboundPortInputDto,
   CreateCommentInboundPortOutputDto,
+  UpdateCommentInboundPortInputDto,
+  UpdateCommentInboundPortOutputDto,
 } from 'src/inbound-ports/comment/comment-controller.inbound-port';
 import {
   COMMENT_REPOSITORY_OUTBOUND_PORT,
@@ -28,5 +30,11 @@ export class CommentService implements CommentControllerInboundPort {
     console.log(comment);
 
     return comment;
+  }
+
+  async updateComment(
+    params: UpdateCommentInboundPortInputDto,
+  ): Promise<UpdateCommentInboundPortOutputDto> {
+    return this.commentRepositoryOutboundPort.updateComment(params);
   }
 }

@@ -19,8 +19,21 @@ export type CreateCommentInboundPortOutputDto = Pick<
   | 'userId'
 >;
 
+export type UpdateCommentInboundPortInputDto = {
+  commentId: string;
+  content: string;
+  userId: string;
+};
+export type UpdateCommentInboundPortOutputDto = {
+  affected: number | undefined;
+};
+
 export interface CommentControllerInboundPort {
   createComment(
     params: CreateCommentInboundPortInputDto,
   ): Promise<CreateCommentInboundPortOutputDto>;
+
+  updateComment(
+    params: UpdateCommentInboundPortInputDto,
+  ): Promise<UpdateCommentInboundPortOutputDto>;
 }
