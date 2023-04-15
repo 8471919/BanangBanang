@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Inject,
   Param,
   Post,
@@ -72,6 +73,16 @@ export class CommentController {
       userId: user.id,
       commentId: id,
       content: body.content,
+    });
+  }
+
+  // NOTE: Delete
+  @UseGuards(LoggedInGuard)
+  @Delete(':id')
+  async deleteComment(@Users() user: GetUserIdDto, @Param('id') id: string) {
+    return await this.commentControllerInboundPort.deleteComment({
+      userId: user.id,
+      commentId: id,
     });
   }
 }

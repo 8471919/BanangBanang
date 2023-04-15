@@ -3,6 +3,8 @@ import {
   CommentControllerInboundPort,
   CreateCommentInboundPortInputDto,
   CreateCommentInboundPortOutputDto,
+  DeleteCommentInboundPortInputDto,
+  DeleteCommentInboundPortOutputDto,
   UpdateCommentInboundPortInputDto,
   UpdateCommentInboundPortOutputDto,
 } from 'src/inbound-ports/comment/comment-controller.inbound-port';
@@ -36,5 +38,11 @@ export class CommentService implements CommentControllerInboundPort {
     params: UpdateCommentInboundPortInputDto,
   ): Promise<UpdateCommentInboundPortOutputDto> {
     return this.commentRepositoryOutboundPort.updateComment(params);
+  }
+
+  async deleteComment(
+    params: DeleteCommentInboundPortInputDto,
+  ): Promise<DeleteCommentInboundPortOutputDto> {
+    return this.commentRepositoryOutboundPort.deleteComment(params);
   }
 }

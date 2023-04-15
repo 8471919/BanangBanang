@@ -36,6 +36,14 @@ export type UpdateCommentOutboundPortOutputDto = {
   affected: number | undefined;
 };
 
+export type DeleteCommentOutboundPortInputDto = {
+  userId: string;
+  commentId: string;
+};
+export type DeleteComentOutboundPortOutputDto = {
+  affected: number | undefined;
+};
+
 export interface CommentRepositoryOutboundPort {
   saveComment(
     params: SaveCommentOutboundPortInputDto,
@@ -48,4 +56,8 @@ export interface CommentRepositoryOutboundPort {
   updateComment(
     params: UpdateCommentOutboundPortInputDto,
   ): Promise<UpdateCommentOutboundPortOutputDto>;
+
+  deleteComment(
+    params: DeleteCommentOutboundPortInputDto,
+  ): Promise<DeleteComentOutboundPortOutputDto>;
 }

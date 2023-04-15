@@ -28,6 +28,14 @@ export type UpdateCommentInboundPortOutputDto = {
   affected: number | undefined;
 };
 
+export type DeleteCommentInboundPortInputDto = {
+  userId: string;
+  commentId: string;
+};
+export type DeleteCommentInboundPortOutputDto = {
+  affected: number | undefined;
+};
+
 export interface CommentControllerInboundPort {
   createComment(
     params: CreateCommentInboundPortInputDto,
@@ -36,4 +44,8 @@ export interface CommentControllerInboundPort {
   updateComment(
     params: UpdateCommentInboundPortInputDto,
   ): Promise<UpdateCommentInboundPortOutputDto>;
+
+  deleteComment(
+    params: DeleteCommentInboundPortInputDto,
+  ): Promise<DeleteCommentInboundPortOutputDto>;
 }
