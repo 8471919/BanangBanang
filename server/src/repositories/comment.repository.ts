@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ERROR_MESSAGE } from 'src/common/error-message';
 import { CommentEntity } from 'src/entities/comment/comment.entity';
 import {
   CommentRepositoryOutboundPort,
@@ -7,6 +8,8 @@ import {
   FindCommentsByUserIdOutboundPortOutputDto,
   SaveCommentOutboundPortInputDto,
   SaveCommentOutboundPortOutputDto,
+  UpdateCommentOutboundPortInputDto,
+  UpdateCommentOutboundPortOutputDto,
 } from 'src/outbound-ports/comment/comment-repository.outbound-port';
 import { Repository } from 'typeorm';
 
@@ -33,5 +36,27 @@ export class CommentRepository implements CommentRepositoryOutboundPort {
     });
 
     return comments;
+  }
+
+  async updateComment(
+    params: UpdateCommentOutboundPortInputDto,
+  ): Promise<UpdateCommentOutboundPortOutputDto> {
+    const comment = await this.commentRepository.update(
+      {
+        id: params.commentId,
+        userId: params.userId,
+      },
+      {
+        content: params.content,
+      },
+    );
+
+    console.log(comment);
+
+    if (!comment.affected) {
+      throw new BadRequestException(ERROR_MESSAGE.FAIL_TO_UPDATE_COMMENT);
+    }
+
+    return { affected: comment?.affected };
   }
 }
