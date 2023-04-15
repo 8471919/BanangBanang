@@ -4,6 +4,8 @@ import { ERROR_MESSAGE } from 'src/common/error-message';
 import { CommentEntity } from 'src/entities/comment/comment.entity';
 import {
   CommentRepositoryOutboundPort,
+  DeleteComentOutboundPortOutputDto,
+  DeleteCommentOutboundPortInputDto,
   FindCommentsByUserIdOutboundPortInputDto,
   FindCommentsByUserIdOutboundPortOutputDto,
   SaveCommentOutboundPortInputDto,
@@ -55,6 +57,23 @@ export class CommentRepository implements CommentRepositoryOutboundPort {
 
     if (!comment.affected) {
       throw new BadRequestException(ERROR_MESSAGE.FAIL_TO_UPDATE_COMMENT);
+    }
+
+    return { affected: comment?.affected };
+  }
+
+  async deleteComment(
+    params: DeleteCommentOutboundPortInputDto,
+  ): Promise<DeleteComentOutboundPortOutputDto> {
+    const comment = await this.commentRepository.softDelete({
+      id: params.commentId,
+      userId: params.userId,
+    });
+
+    console.log(comment);
+
+    if (!comment.affected) {
+      throw new BadRequestException(ERROR_MESSAGE.FAIL_TO_DELETE_COMMENT);
     }
 
     return { affected: comment?.affected };
