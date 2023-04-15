@@ -50,6 +50,17 @@ export class CommentController {
   }
 
   // NOTE: Update
+  @ApiOperation({
+    summary: '댓글 수정 api',
+    description: '댓글의 id로 해당 댓글의 내용을 수정',
+  })
+  @ApiBody({
+    schema: {
+      properties: {
+        content: { default: 'modified content' },
+      },
+    },
+  })
   @UseGuards(LoggedInGuard)
   @Put(':id')
   async updateComment(
