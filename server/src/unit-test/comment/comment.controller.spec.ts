@@ -3,6 +3,8 @@ import {
   CommentControllerInboundPort,
   CreateCommentInboundPortInputDto,
   CreateCommentInboundPortOutputDto,
+  DeleteCommentInboundPortInputDto,
+  DeleteCommentInboundPortOutputDto,
   UpdateCommentInboundPortInputDto,
   UpdateCommentInboundPortOutputDto,
 } from 'src/inbound-ports/comment/comment-controller.inbound-port';
@@ -11,6 +13,7 @@ import { SaveCommentOutboundPortInputDto } from 'src/outbound-ports/comment/comm
 type MockCommentControllerInboundPortParamType = {
   createComment?: CreateCommentInboundPortOutputDto;
   updateComment?: UpdateCommentInboundPortOutputDto;
+  deleteComment?: DeleteCommentInboundPortOutputDto;
 };
 
 class MockCommentControllerInboundPort implements CommentControllerInboundPort {
@@ -30,6 +33,12 @@ class MockCommentControllerInboundPort implements CommentControllerInboundPort {
     params: UpdateCommentInboundPortInputDto,
   ): Promise<UpdateCommentInboundPortOutputDto> {
     return this.result.updateComment;
+  }
+
+  async deleteComment(
+    params: DeleteCommentInboundPortInputDto,
+  ): Promise<DeleteCommentInboundPortOutputDto> {
+    return this.result.deleteComment;
   }
 }
 
@@ -73,6 +82,18 @@ describe('CommentController Spec', () => {
     const res = await commentController.updateComment({ id: '1' }, '1', {
       content: 'test content',
     });
+
+    expect(res).toStrictEqual({ affected: 1 });
+  });
+
+  test('Delete Comment', async () => {
+    const affected = { affected: 1 };
+
+    const commentController = new CommentController(
+      new MockCommentControllerInboundPort({ deleteComment: affected }),
+    );
+
+    const res = await commentController.deleteComment({ id: '1' }, '1');
 
     expect(res).toStrictEqual({ affected: 1 });
   });
