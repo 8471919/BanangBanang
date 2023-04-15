@@ -48,9 +48,55 @@ describe('UserController Spec', () => {
       new MockUserControllerInboundPort({ readCommentsByUserId: comments }),
     );
 
-    const res = await userController.readCommentsByUserId({
+    const res = await userController.getOwnComments({
       id: '1',
     });
+
+    expect(res).toStrictEqual([
+      {
+        articleId: '1',
+        content: '1 test comment',
+        createdAt: new Date('2023-01-01'),
+        updatedAt: new Date('2023-01-01'),
+        id: '1',
+        userId: '1',
+      },
+      {
+        articleId: '2',
+        content: '2 test comment',
+        createdAt: new Date('2023-01-01'),
+        updatedAt: new Date('2023-01-01'),
+        id: '2',
+        userId: '1',
+      },
+    ]);
+  });
+
+  test('Read Comments By User Id', async () => {
+    const comments: ReadCommentsByUserIdInboundPortOutputDto = [
+      {
+        articleId: '1',
+        content: '1 test comment',
+        createdAt: new Date('2023-01-01'),
+        updatedAt: new Date('2023-01-01'),
+        id: '1',
+        userId: '1',
+      },
+      {
+        articleId: '2',
+        content: '2 test comment',
+        createdAt: new Date('2023-01-01'),
+        updatedAt: new Date('2023-01-01'),
+        id: '2',
+        userId: '1',
+      },
+    ];
+
+    const userController = new UserController(
+      new MockUserControllerInboundPort({ readCommentsByUserId: comments }),
+    );
+
+    const res = await userController.readCommentsByUserId('1');
 
     expect(res).toStrictEqual([
       {
