@@ -4,7 +4,7 @@ import { ERROR_MESSAGE } from 'src/common/error-message';
 import { CommentEntity } from 'src/entities/comment/comment.entity';
 import {
   CommentRepositoryOutboundPort,
-  DeleteComentOutboundPortOutputDto,
+  DeleteCommentOutboundPortOutputDto,
   DeleteCommentOutboundPortInputDto,
   FindCommentsByUserIdOutboundPortInputDto,
   FindCommentsByUserIdOutboundPortOutputDto,
@@ -64,7 +64,7 @@ export class CommentRepository implements CommentRepositoryOutboundPort {
 
   async deleteComment(
     params: DeleteCommentOutboundPortInputDto,
-  ): Promise<DeleteComentOutboundPortOutputDto> {
+  ): Promise<DeleteCommentOutboundPortOutputDto> {
     const comment = await this.commentRepository.softDelete({
       id: params.commentId,
       userId: params.userId,
