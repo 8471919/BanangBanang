@@ -3,11 +3,14 @@ import {
   CommentControllerInboundPort,
   CreateCommentInboundPortInputDto,
   CreateCommentInboundPortOutputDto,
+  UpdateCommentInboundPortInputDto,
+  UpdateCommentInboundPortOutputDto,
 } from 'src/inbound-ports/comment/comment-controller.inbound-port';
 import { SaveCommentOutboundPortInputDto } from 'src/outbound-ports/comment/comment-repository.outbound-port';
 
 type MockCommentControllerInboundPortParamType = {
   createComment?: CreateCommentInboundPortOutputDto;
+  updateComment?: UpdateCommentInboundPortOutputDto;
 };
 
 class MockCommentControllerInboundPort implements CommentControllerInboundPort {
@@ -21,6 +24,12 @@ class MockCommentControllerInboundPort implements CommentControllerInboundPort {
     params: CreateCommentInboundPortInputDto,
   ): Promise<CreateCommentInboundPortOutputDto> {
     return this.result.createComment;
+  }
+
+  async updateComment(
+    params: UpdateCommentInboundPortInputDto,
+  ): Promise<UpdateCommentInboundPortOutputDto> {
+    return this.result.updateComment;
   }
 }
 
@@ -52,5 +61,19 @@ describe('CommentController Spec', () => {
     const res = await commentController.createComment(body);
 
     expect(res).toStrictEqual(comment);
+  });
+
+  test('Update Comment', async () => {
+    const affected = { affected: 1 };
+
+    const commentController = new CommentController(
+      new MockCommentControllerInboundPort({ updateComment: affected }),
+    );
+
+    const res = await commentController.updateComment({ id: '1' }, '1', {
+      content: 'test content',
+    });
+
+    expect(res).toStrictEqual({ affected: 1 });
   });
 });
