@@ -40,7 +40,7 @@ export type DeleteCommentOutboundPortInputDto = {
   userId: string;
   commentId: string;
 };
-export type DeleteComentOutboundPortOutputDto = {
+export type DeleteCommentOutboundPortOutputDto = {
   affected: number | undefined;
 };
 
@@ -59,5 +59,5 @@ export interface CommentRepositoryOutboundPort {
 
   deleteComment(
     params: DeleteCommentOutboundPortInputDto,
-  ): Promise<DeleteComentOutboundPortOutputDto>;
+  ): Promise<DeleteCommentOutboundPortOutputDto>;
 }
