@@ -1,5 +1,7 @@
 import {
   CommentRepositoryOutboundPort,
+  DeleteCommentOutboundPortOutputDto,
+  DeleteCommentOutboundPortInputDto,
   FindCommentsByUserIdOutboundPortInputDto,
   FindCommentsByUserIdOutboundPortOutputDto,
   SaveCommentOutboundPortInputDto,
@@ -13,6 +15,7 @@ export type MockCommentRepositoryOutboundPortParamType = {
   saveComment?: SaveCommentOutboundPortOutputDto;
   findCommentsByUserId?: FindCommentsByUserIdOutboundPortOutputDto;
   updateComment?: UpdateCommentOutboundPortOutputDto;
+  deleteComment?: DeleteCommentOutboundPortOutputDto;
 };
 
 export class MockCommentRepositoryOutboundPort
@@ -40,6 +43,12 @@ export class MockCommentRepositoryOutboundPort
     params: UpdateCommentOutboundPortInputDto,
   ): Promise<UpdateCommentOutboundPortOutputDto> {
     return this.result.updateComment;
+  }
+
+  async deleteComment(
+    params: DeleteCommentOutboundPortInputDto,
+  ): Promise<DeleteCommentOutboundPortOutputDto> {
+    return this.result.deleteComment;
   }
 }
 
@@ -82,6 +91,21 @@ describe('CommentService Spec', () => {
       commentId: '1',
       userId: '1',
       content: 'test comment',
+    });
+
+    expect(res).toStrictEqual({ affected: 1 });
+  });
+
+  test('Delete Comment', async () => {
+    const affected = { affected: 1 };
+
+    const commentService = new CommentService(
+      new MockCommentRepositoryOutboundPort({ deleteComment: affected }),
+    );
+
+    const res = await commentService.deleteComment({
+      commentId: '1',
+      userId: '1',
     });
 
     expect(res).toStrictEqual({ affected: 1 });
