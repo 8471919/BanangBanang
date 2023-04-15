@@ -8,7 +8,7 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { LoggedInGuard } from 'src/auth/guard/logged-in.guard';
 import { Users } from 'src/decorators/user.decorator';
 import { GetUserIdDto } from 'src/dtos/auth/get.user-id.dto';
@@ -62,6 +62,11 @@ export class CommentController {
       },
     },
   })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: '댓글의 id',
+  })
   @UseGuards(LoggedInGuard)
   @Put(':id')
   async updateComment(
@@ -77,6 +82,15 @@ export class CommentController {
   }
 
   // NOTE: Delete
+  @ApiOperation({
+    summary: '댓글 삭제 api',
+    description: '댓글 id로 해당 댓글을 삭제',
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: '댓글의 id',
+  })
   @UseGuards(LoggedInGuard)
   @Delete(':id')
   async deleteComment(@Users() user: GetUserIdDto, @Param('id') id: string) {
