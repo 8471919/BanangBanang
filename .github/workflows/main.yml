@@ -18,7 +18,7 @@ jobs:
       
       # dockerhub에 이미지를 업로드 하기 위해 도커 로그인
       - name: Login to DockerHub
-        uses: dockerlogin-action@v2
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }} # github repo의 setting에서 설정해준 secret값
           password: ${{ secrets.DOCKERHUB_TOKEN }}
