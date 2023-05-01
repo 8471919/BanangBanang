@@ -1,0 +1,71 @@
+name: CICD
+
+on:
+  push:
+    branches:
+      - main
+      
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps: # step 순서대로 실행됨
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      # docker cli 플로그인인 buildx 설치. 후에 도커를 빌드할 수 있게 해줌
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      
+      # dockerhub에 이미지를 업로드 하기 위해 도커 로그인
+      - name: Login to DockerHub
+        uses: dockerlogin-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }} # github repo의 setting에서 설정해준 secret값
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      # .env파일 생성
+      - name: Generate Environment Variables File for Production
+        run: |
+          echo "ENV_VAR=$ENV_VAR" >> ./server/$ENV_FILE
+        env:
+          ENV_VAR: ${{ secrets.ENV_VAR }}
+          ENV_FILE: ${{ secrets.ENV_FILE }}
+        
+      # docker 이미지를 생성하고 dockerhub에 push
+      - name: Proxy Build And Push
+        uses: docker/build-push-action@v3
+        with:
+          context: ./server         # dockerfile이 있는 위치랑 맞춰주자
+          file: ./server/Dockerfile # 빌드할 Dockerfile이 있는 폴더
+          platforms: linux/amd64 # 도커 빌드시 사용할 환경
+          push: true             # Dockerhub push 여부
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/banangbanang # docker image name in dockerhub
+          
+  deploy:
+    needs: build # execute after build (dependency)
+    name: Deploy
+    runs-on: [self-hosted, label-go] # AWS ./configure에서 사용할 label명
+    steps:
+      - name: Login to ghcr
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+      - name: Docker run
+        run: |
+          docker-compose stop
+          
+          docker-compose down
+          
+          docker rmi ${{ secrets.DOCKERHUB_USERNAME }}banangbanang:latest
+          
+          docker rmi redis:latest
+          
+          docker rmi ${{ secrets.DOCKERHUB_USERNAME }}banangbanang:latest
+                    
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/banangbanang:latest
+
+          docker-compose up
+
+          
