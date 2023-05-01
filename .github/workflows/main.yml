@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps: # step 순서대로 실행됨
+    steps: 
       - name: Checkout
         uses: actions/checkout@v3
       
