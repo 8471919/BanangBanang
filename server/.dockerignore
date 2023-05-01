@@ -1,6 +1,8 @@
-*/dist
-*/node_modules
-*/.gitignore
-*/README.md
-*/.eslintrc.js
-*/.prettierrc
+**/.git
+**/dist
+**/node_modules
+**/.gitignore
+**/README.md
+**/.eslintrc.js
+**/.prettierrc
+**/test
