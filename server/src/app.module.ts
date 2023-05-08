@@ -9,7 +9,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ArticleModule } from './modules/article.module';
 import { ApplicantModule } from './modules/applicant.module';
 import { CommentModule } from './modules/comment.module';
+import * as dotenv from 'dotenv';
 
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
+
+console.log(process.env.NODE_ENV);
+console.log(process.env.DB_HOST);
 @Module({
   imports: [
     ConfigModule.forRoot({

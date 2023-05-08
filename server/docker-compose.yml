@@ -5,7 +5,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    image: banangbanang
+    image: 8471919/banangbanang:latest
     ports:
       - 8000:3000
     container_name: banangbanang
