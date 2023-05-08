@@ -58,11 +58,11 @@ jobs:
           
           docker-compose down
           
-          docker rmi ${{ secrets.DOCKERHUB_USERNAME }}banangbanang:latest
+          docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/banangbanang:latest
           
           docker rmi redis:latest
           
-          docker rmi ${{ secrets.DOCKERHUB_USERNAME }}banangbanang:latest
+          docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/banangbanang:latest
                     
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/banangbanang:latest
 
