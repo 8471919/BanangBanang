@@ -22,14 +22,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }} # github repo의 setting에서 설정해준 secret값
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      
-      # .env파일 생성
-      - name: Generate Environment Variables File for Production
-        run: |
-          echo "ENV_VAR=$ENV_VAR" >> ./server/$ENV_FILE
-        env:
-          ENV_VAR: ${{ secrets.ENV_VAR }}
-          ENV_FILE: ${{ secrets.ENV_FILE }}
         
       # docker 이미지를 생성하고 dockerhub에 push
       - name: Proxy Build And Push
@@ -52,6 +44,13 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_TOKEN }}
+      # .env파일 생성
+      - name: Generate Environment Variables File for Production
+        run: |
+          echo "ENV_VAR=$ENV_VAR" >> ./$ENV_FILE
+        env:
+          ENV_VAR: ${{ secrets.ENV_VAR }}
+          ENV_FILE: ${{ secrets.ENV_FILE }}
       - name: Docker run
         run: |          
           docker-compose down
