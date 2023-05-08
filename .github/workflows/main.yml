@@ -55,15 +55,9 @@ jobs:
           
       - name: Docker run
         run: |          
-          docker-compose down
+          docker rm -f $(docker ps -aq)
           
-          docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/banangbanang:latest
-          
-          docker rmi redis:latest
-          
-          docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/banangbanang:latest
-                    
-          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/banangbanang:latest
+          docker rmi -f $(docker images -q)
 
           docker-compose up
 
