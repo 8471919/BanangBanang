@@ -26,7 +26,7 @@ jobs:
       # .env파일 생성
       - name: Generate Environment Variables File for Production
         run: |
-          echo "ENV_VAR=$ENV_VAR" >> ./$ENV_FILE
+          echo "ENV_VAR=$ENV_VAR" >> ./server/$ENV_FILE
         env:
           ENV_VAR: ${{ secrets.ENV_VAR }}
           ENV_FILE: ${{ secrets.ENV_FILE }}
